@@ -1,0 +1,1 @@
+cmd_drivers/media/common/tuners/built-in.o :=  rm -f drivers/media/common/tuners/built-in.o; /home/jcureton/Desktop/mixup-vc/arm-2009q3/bin/arm-none-linux-gnueabi-ar rcs drivers/media/common/tuners/built-in.o

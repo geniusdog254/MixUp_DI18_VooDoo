@@ -1,0 +1,1 @@
+cmd_usr/initramfs_data.img := /bin/bash /home/jcureton/Desktop/mixup-vc/linux-2.6.29/scripts/gen_initramfs_list.sh -o usr/initramfs_data.img  -u 0  -g 0   /home/jcureton/Desktop/mixup-vc/initramfs_list
