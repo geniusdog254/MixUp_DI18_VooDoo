@@ -7,6 +7,22 @@
 *.o
 *.so
 
+# Stuff needed for build, but hated for repos #
+###############################################
+.config
+vmlinux
+zImage
+.Image.cmd
+.zImage.cmd
+bfq.patch
+.config.old
+.configured
+.depend_done
+.unpacked
+.version
+.vmlinux.cmd
+.vmlinux.o.cmd
+
 # Packages #
 ############
 # it's better to unpack these files and commit the raw source
