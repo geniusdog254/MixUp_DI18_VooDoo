@@ -233,88 +233,83 @@ static void gp2a_work_func_light(struct work_struct *work)
 	gprintk("Optimized adc = %d\n",adc);
 	gprintk("cur_state = %d\n",cur_state);
 	gprintk("light_enable = %d\n",light_enable);
-#if 1 //add 150lux
+#if 1
+	//Geniusdog254: Lots of neat levels all thru here. Should be brighter most of the time :D
 	if(adc >= 2100)
 	{
 		level_state = LIGHT_LEVEL5;
-		buffering = 5;
+		buffering = 4;
 	}
 
 	else if(adc >= 1900 && adc < 2100)
 	{
-		if(buffering == 5)
+		if(buffering == 4)
 		{	
 			level_state = LIGHT_LEVEL5;
-			buffering = 5;
-		}
-		else if((buffering == 1)||(buffering == 2)||(buffering == 3)||(buffering == 4))
-		{
-			level_state = LIGHT_LEVEL4;
-			buffering = 4;
-		}
-		}			
-			
-	else if(adc >= 1550 && adc < 1900)
-	{
-		level_state = LIGHT_LEVEL4;
-		buffering = 4;
-			}
-
-	else if(adc >= 1200 && adc < 1550)
-	{
-		if((buffering == 4)||(buffering == 5))
-		{	
-			level_state = LIGHT_LEVEL4;
 			buffering = 4;
 		}
 		else if((buffering == 1)||(buffering == 2)||(buffering == 3))
 		{
-			level_state = LIGHT_LEVEL3;
+			level_state = LIGHT_LEVEL4;
 			buffering = 3;
 		}
-				}
-
-	else if(adc >= 800 && adc < 1200)
+		}			
+			
+	else if(adc >= 1800 && adc < 1900)
 	{
-		level_state = LIGHT_LEVEL3;
+		level_state = LIGHT_LEVEL4;
 		buffering = 3;
-			}
+	}
 
-	else if(adc >= 600 && adc < 800)
+	else if(adc >= 1200 && adc < 1800)
 	{
-		if((buffering == 3)||(buffering == 4)||(buffering == 5))
+		if((buffering == 3)||(buffering == 4))
 		{	
-			level_state = LIGHT_LEVEL3;
+			level_state = LIGHT_LEVEL4;
 			buffering = 3;
 		}
 		else if((buffering == 1)||(buffering == 2))
 		{
-			level_state = LIGHT_LEVEL2;
+			level_state = LIGHT_LEVEL3;
 			buffering = 2;
 		}
 	}
-	
-	else if(adc >= 400 && adc < 600)
-	{
-		level_state = LIGHT_LEVEL2;
-		buffering = 2;
-}
 
-	else if(adc >= 250 && adc < 400)
+	else if(adc >= 500 && adc < 1200)
 	{
-		if((buffering == 2)||(buffering == 3)||(buffering == 4)||(buffering == 5))
+		level_state = LIGHT_LEVEL3;
+		buffering = 2;
+	}
+
+	else if(adc >= 250 && adc < 500)
+	{
+		if((buffering == 2)||(buffering == 3)||(buffering == 4))
 		{	
-		level_state = LIGHT_LEVEL2;
+			level_state = LIGHT_LEVEL3;
 			buffering = 2;
 		}
-		else if(buffering == 1)
+		else if((buffering == 1))
 		{
-			level_state = LIGHT_LEVEL1;
+			level_state = LIGHT_LEVEL2;
 			buffering = 1;
 		}
 	}
 	
-	else if(adc < 250)
+	else if(adc >= 44 && adc < 250)
+	{
+		if((buffering == 2)||(buffering == 3)||(buffering == 4))
+		{	
+			level_state = LIGHT_LEVEL3;
+ 			buffering = 2;
+ 		}
+ 		else if(buffering == 1)
+ 		{
+			level_state = LIGHT_LEVEL2;
+ 			buffering = 1;
+ 		}
+	}
+	
+	else if(adc < 44)
 	{
 		level_state = LIGHT_LEVEL1;
 		buffering = 1;
@@ -328,7 +323,7 @@ static void gp2a_work_func_light(struct work_struct *work)
 #ifdef MDNIE_TUNINGMODE_FOR_BACKLIGHT
 	if(autobrightness_mode)
 		{
-		if((pre_val!=1)&&(current_gamma_value == 24)&&(level_state == LIGHT_LEVEL5)&&(current_mDNIe_UI == mDNIe_UI_MODE))
+		if((pre_val!=1)&&(current_gamma_value == 24)&&(level_state == LIGHT_LEVEL4)&&(current_mDNIe_UI == mDNIe_UI_MODE))
 		{
 			mDNIe_Mode_set_for_backlight(pmDNIe_Gamma_set[1]);
 			pre_val = 1;
@@ -408,7 +403,8 @@ static enum hrtimer_restart gp2a_timer_func(struct hrtimer *timer)
 	queue_work(gp2a_wq, &gp2a->work_light);
 	//hrtimer_start(&gp2a->timer,ktime_set(LIGHT_PERIOD,0),HRTIMER_MODE_REL);
 	light_polling_time = ktime_set(0,0);
-	light_polling_time = ktime_add_us(light_polling_time,500000);
+	//Geniusdog254: Light polling time was 500000, now 400000
+	light_polling_time = ktime_add_us(light_polling_time,400000);
 	hrtimer_start(&gp2a->timer,light_polling_time,HRTIMER_MODE_REL);
 	return HRTIMER_NORESTART;
 }
