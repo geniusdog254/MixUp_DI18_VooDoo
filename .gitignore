@@ -22,6 +22,16 @@ bfq.patch
 .version
 .vmlinux.cmd
 .vmlinux.o.cmd
+.tmp_versions
+modules.order
+vmlinux
+*.o.cmd
+Image
+*.d
+.tmp_vm*
+.tmp_kall*
+.tmp_Sys*
+..tmp_vm*
 
 # Packages #
 ############
