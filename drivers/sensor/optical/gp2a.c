@@ -153,7 +153,8 @@ EXPORT_SYMBOL(gp2a_get_lightsensor_status);
  *                 
  */
 
-static int buffering = 2;
+//Geniusdog254: Originally 2, this should make it err slightly brighter to start with.
+static int buffering = 3;
 
 extern int backlight_level;
 

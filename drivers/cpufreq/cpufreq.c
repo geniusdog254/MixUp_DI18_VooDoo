@@ -915,8 +915,9 @@ static int cpufreq_add_dev(struct sys_device *sys_dev)
 		dprintk("initialization failed\n");
 		goto err_out;
 	}
-	policy->user_policy.min = policy->min;
-	policy->user_policy.max = policy->max;
+	//Geniusdog254: Trying to set freqs from config here
+	policy->user_policy.min = CPU_HUMMINGBIRD_MIN_FREQ;
+	policy->user_policy.max = CPU_HUMMINGBIRD_MAX_FREQ;
 
 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
 				     CPUFREQ_START, policy);
@@ -1801,8 +1802,9 @@ static int __cpufreq_set_policy(struct cpufreq_policy *data,
 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
 			CPUFREQ_NOTIFY, policy);
 
-	data->min = policy->min;
-	data->max = policy->max;
+	//Geniusdog254: Hopefully setting min & max freqs in config now
+	data->min = CPU_HUMMINGBIRD_MIN_FREQ;
+	data->max = CPU_HUMMINGBIRD_MAX_FREQ;
 
 	dprintk("new min and max freqs are %u - %u kHz\n",
 					data->min, data->max);
