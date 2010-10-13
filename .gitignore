@@ -32,6 +32,11 @@ Image
 .tmp_kall*
 .tmp_Sys*
 ..tmp_vm*
+.*.cmd
+*/*/.*.cmd
+*/.*.cmd
+System.map
+usr/initramfs_data.img
 
 # Packages #
 ############

@@ -916,8 +916,8 @@ static int cpufreq_add_dev(struct sys_device *sys_dev)
 		goto err_out;
 	}
 	//Geniusdog254: Trying to set freqs from config here
-	policy->user_policy.min = CPU_HUMMINGBIRD_MIN_FREQ;
-	policy->user_policy.max = CPU_HUMMINGBIRD_MAX_FREQ;
+	policy->user_policy.min = CONFIG_CPU_HUMMINGBIRD_MIN_FREQ;
+	policy->user_policy.max = CONFIG_CPU_HUMMINGBIRD_MAX_FREQ;
 
 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
 				     CPUFREQ_START, policy);
@@ -1802,9 +1802,10 @@ static int __cpufreq_set_policy(struct cpufreq_policy *data,
 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
 			CPUFREQ_NOTIFY, policy);
 
-	//Geniusdog254: Hopefully setting min & max freqs in config now
-	data->min = CPU_HUMMINGBIRD_MIN_FREQ;
-	data->max = CPU_HUMMINGBIRD_MAX_FREQ;
+	//Geniusdog254: Not changed here. Only needs set on init. If set to config value
+	//here too then it won't let user change it no matter what. Oops
+	data->min = policy->min;
+	data->max = policy->max;
 
 	dprintk("new min and max freqs are %u - %u kHz\n",
 					data->min, data->max);

@@ -39,13 +39,15 @@
 #define DATA_ONLY		0xFF
 
 //Geniusdog: Tweaks for dimmer on dimmest and minimum lower
-#define DIM_BL	15
+#define DIM_BL	18
 #define MIN_BL	25
 #define MAX_BL	255
 
 #define MAX_GAMMA_VALUE	24	// we have 25 levels. -> 16 levels -> 24 levels
+
 // Voodoo here : set the lowest brightness only when 2% instead of 5% battery left
-// Geniusdog: Moved to 1, I want my brightness full time dammit ;)
+// Geniusdog: Moved to 1%, I want my brightness full time, damnit ;)
+// Geniusdog254: ^^ is irrelevant now, cleaner to just totally remove dimmer code on low batt
 #define CRITICAL_BATTERY_LEVEL 1
 
 #define GAMMASET_CONTROL //for 1.9/2.2 gamma control from platform
@@ -3713,13 +3715,14 @@ static int s5p_bl_update_status(struct backlight_device* bd)
 	
 	if(IsLDIEnabled())
 	{
-	#if 0
+	//Geniusdog254: Lets just totally disable the critical battery dim, shall we?
+	/*#if 0
 		if (get_battery_level() <= CRITICAL_BATTERY_LEVEL && !is_charging_enabled())
 		{
 			if (bl > DIM_BL)
-				bl = 22;
+				bl = DIM_BL;
 		}
-	#endif
+	#endif*/
 		if(bl == 0)
 			level = 0;	//lcd off
 		else if((bl < MIN_BL) && (bl > 0))
@@ -3731,7 +3734,7 @@ static int s5p_bl_update_status(struct backlight_device* bd)
 		{
 			msleep(20);
 			s6e63m0_panel_send_sequence(s6e63m0_SEQ_DISPLAY_OFF);
-//			printk("Update status brightness[0~255]:(%d) - LCD OFF \n", bl);
+			printk("Update status brightness[0~255]:(%d) - LCD OFF \n", bl);
 			bd_brightness = 0;
 			backlight_level = 0;
 			current_gamma_value = -1;

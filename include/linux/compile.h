@@ -1,7 +1,7 @@
-/* This file is auto generated, version 3 */
+/* This file is auto generated, version 7 */
 #define UTS_MACHINE "arm"
-#define UTS_VERSION "#3 Wed Oct 6 20:05:50 CDT 2010"
-#define LINUX_COMPILE_TIME "20:05:50"
+#define UTS_VERSION "#7 Tue Oct 12 19:33:26 CDT 2010"
+#define LINUX_COMPILE_TIME "19:33:26"
 #define LINUX_COMPILE_BY "jcureton"
 #define LINUX_COMPILE_HOST "jcureton-laptop"
 #define LINUX_COMPILE_DOMAIN ""
