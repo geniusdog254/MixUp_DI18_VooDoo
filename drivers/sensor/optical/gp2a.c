@@ -282,7 +282,7 @@ static void gp2a_work_func_light(struct work_struct *work)
 		buffering = 2;
 	}
 
-	else if(adc >= 250 && adc < 500)
+	else if(adc >= 220 && adc < 500)
 	{
 		if((buffering == 2)||(buffering == 3)||(buffering == 4))
 		{	
@@ -296,7 +296,7 @@ static void gp2a_work_func_light(struct work_struct *work)
 		}
 	}
 	
-	else if(adc >= 44 && adc < 250)
+	else if(adc >= 44 && adc < 220)
 	{
 		if((buffering == 2)||(buffering == 3)||(buffering == 4))
 		{	
