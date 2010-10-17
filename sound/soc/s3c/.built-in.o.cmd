@@ -1,1 +1,0 @@
-cmd_sound/soc/s3c/built-in.o :=  /home/jcureton/Desktop/mixup-vc/arm-2009q3/bin/arm-none-linux-gnueabi-ld -EL    -r -o sound/soc/s3c/built-in.o sound/soc/s3c/s3c-pcm-lp.o sound/soc/s3c/s3c-i2s.o sound/soc/s3c/s3c-pcm.o sound/soc/s3c/s3c-pcmdev.o sound/soc/s3c/snd-soc-universal-wm8994.o sound/soc/s3c/snd-soc-universal-pcm-wm8994.o 

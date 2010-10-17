@@ -252,7 +252,9 @@ static int cpufreq_governor_interactive(struct cpufreq_policy *new_policy,
 			return rc;
 
 		pm_idle_old = pm_idle;
-		pm_idle = cpufreq_idle;
+
+	//this causes a kernel panic, comment out until we figure out why
+	//	pm_idle = cpufreq_idle;
 		policy = new_policy;
 		break;
 

@@ -766,6 +766,9 @@ static struct attribute *default_attrs[] = {
 	NULL
 };
 
+struct kobject *cpufreq_global_kobject;
+EXPORT_SYMBOL(cpufreq_global_kobject);
+
 #define to_policy(k) container_of(k,struct cpufreq_policy,kobj)
 #define to_attr(a) container_of(a,struct freq_attr,attr)
 
@@ -915,9 +918,8 @@ static int cpufreq_add_dev(struct sys_device *sys_dev)
 		dprintk("initialization failed\n");
 		goto err_out;
 	}
-	//Geniusdog254: Trying to set freqs from config here
-	policy->user_policy.min = CONFIG_CPU_HUMMINGBIRD_MIN_FREQ;
-	policy->user_policy.max = CONFIG_CPU_HUMMINGBIRD_MAX_FREQ;
+	policy->user_policy.min = policy->min;
+	policy->user_policy.max = policy->max;
 
 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
 				     CPUFREQ_START, policy);
@@ -1802,8 +1804,6 @@ static int __cpufreq_set_policy(struct cpufreq_policy *data,
 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
 			CPUFREQ_NOTIFY, policy);
 
-	//Geniusdog254: Not changed here. Only needs set on init. If set to config value
-	//here too then it won't let user change it no matter what. Oops
 	data->min = policy->min;
 	data->max = policy->max;
 
@@ -2053,6 +2053,11 @@ static int __init cpufreq_core_init(void)
 		per_cpu(policy_cpu, cpu) = -1;
 		init_rwsem(&per_cpu(cpu_policy_rwsem, cpu));
 	}
+
+        cpufreq_global_kobject = kobject_create_and_add("cpufreq",
+                                                &cpu_sysdev_class.kset.kobj);
+        BUG_ON(!cpufreq_global_kobject);
+
 	return 0;
 }
 
