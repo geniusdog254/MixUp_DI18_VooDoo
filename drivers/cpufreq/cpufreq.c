@@ -918,8 +918,10 @@ static int cpufreq_add_dev(struct sys_device *sys_dev)
 		dprintk("initialization failed\n");
 		goto err_out;
 	}
-	policy->user_policy.min = policy->min;
-	policy->user_policy.max = policy->max;
+	//Jesse C. (Geniusdog254): Allow config changes to maximum speed at boot
+	//now locks to the value set in config until manually changed
+	policy->user_policy.max = CONFIG_CPU_HUMMINGBIRD_MIN_FREQ;
+	policy->user_policy.max = CONFIG_CPU_HUMMINGBIRD_MAX_FREQ;
 
 	blocking_notifier_call_chain(&cpufreq_policy_notifier_list,
 				     CPUFREQ_START, policy);

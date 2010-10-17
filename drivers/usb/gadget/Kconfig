@@ -780,4 +780,12 @@ config USB_CDC_COMPOSITE
 
 endchoice
 
+# Jesse C. (Geniusdog254): Enable easy changes of RNDIS support for Android kernels
+config ANDROID_RNDIS_SUPPORT
+	bool "Toggle RNDIS support for Android kernels"
+	default n
+	help
+	   Since RNDIS causes issues on some Android kernel setups, easily
+	   enable/disable it here.
+
 endif # USB_GADGET
