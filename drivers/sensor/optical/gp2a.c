@@ -153,7 +153,8 @@ EXPORT_SYMBOL(gp2a_get_lightsensor_status);
  *                 
  */
 
-static int buffering = 2;
+//Jesse C. - Err on the brighter side
+static int buffering = 3;
 
 extern int backlight_level;
 
@@ -289,32 +290,33 @@ static void gp2a_work_func_light(struct work_struct *work)
 		}
 		else if((buffering == 1)||(buffering == 2))
 		{
-			level_state = LIGHT_LEVEL2;
+			level_state = LIGHT_LEVEL3;
 			buffering = 2;
 		}
 	}
 	
 	else if(adc >= 400 && adc < 600)
 	{
-		level_state = LIGHT_LEVEL2;
+		level_state = LIGHT_LEVEL3;
 		buffering = 2;
 }
 
 	else if(adc >= 250 && adc < 400)
 	{
-		if((buffering == 2)||(buffering == 3)||(buffering == 4)||(buffering == 5))
-		{	
 		level_state = LIGHT_LEVEL2;
-			buffering = 2;
-		}
-		else if(buffering == 1)
-		{
-			level_state = LIGHT_LEVEL1;
-			buffering = 1;
-		}
+		buffering = 2;
 	}
 	
-	else if(adc < 250)
+	//Jesse C. - I'm done screwing with Samsung's shitty logic here.
+	//the code seems legit, but the reasoning is weak. Here, this
+	//should fix the minimum brightness issue. About goddamn time.
+	else if(adc >= 35 && adc < 250)
+	{
+		level_state = LIGHT_LEVEL2;
+		buffering = 1;
+	}
+
+	else if (adc < 35)
 	{
 		level_state = LIGHT_LEVEL1;
 		buffering = 1;
