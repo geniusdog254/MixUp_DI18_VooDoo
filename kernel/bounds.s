@@ -9,21 +9,20 @@
 	.eabi_attribute 30, 4
 	.eabi_attribute 18, 4
 	.file	"bounds.c"
-@ GNU C (Sourcery G++ Lite 2009q3-67) version 4.4.1 (arm-none-linux-gnueabi)
+@ GNU C (Sourcery G++ Lite 2009q3-68) version 4.4.1 (arm-none-eabi)
 @	compiled by GNU C version 4.3.2, GMP version 4.3.1, MPFR version 2.4.1-p5.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc -Iinclude
-@ -I/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include
+@ -I/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include
 @ -Iarch/arm/mach-s5pc110/include -Iarch/arm/plat-s5pc11x/include
 @ -Iarch/arm/plat-s3c/include
-@ -I/home/jcureton/Desktop/mixup-vc/modules/include -iprefix
-@ /home/jcureton/Desktop/mixup-vc/arm-2009q3/bin/../lib/gcc/arm-none-linux-gnueabi/4.4.1/
-@ -isysroot
-@ /home/jcureton/Desktop/mixup-vc/arm-2009q3/bin/../arm-none-linux-gnueabi/libc
-@ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DKBUILD_STR(s)=#s
-@ -DKBUILD_BASENAME=KBUILD_STR(bounds) -DKBUILD_MODNAME=KBUILD_STR(bounds)
-@ -isystem
-@ /home/jcureton/Desktop/mixup-vc/arm-2009q3/bin/../lib/gcc/arm-none-linux-gnueabi/4.4.1/include
+@ -I/home/devinxtreme/kernels/mu_vc/modules/include -iprefix
+@ /home/devinxtreme/kernels/arm-2009q3/bin/../lib/gcc/arm-none-eabi/4.4.1/
+@ -isysroot /home/devinxtreme/kernels/arm-2009q3/bin/../arm-none-eabi
+@ -D__USES_INITFINI__ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm
+@ -DKBUILD_STR(s)=#s -DKBUILD_BASENAME=KBUILD_STR(bounds)
+@ -DKBUILD_MODNAME=KBUILD_STR(bounds) -isystem
+@ /home/devinxtreme/kernels/arm-2009q3/bin/../lib/gcc/arm-none-eabi/4.4.1/include
 @ -include include/linux/autoconf.h -MD kernel/.bounds.s.d kernel/bounds.c
 @ -mlittle-endian -marm -mapcs -mno-sched-prolog -mabi=aapcs-linux
 @ -mno-thumb-interwork -march=armv7-a -msoft-float -auxbase-strip
@@ -55,7 +54,7 @@
 @ -ftree-reassoc -ftree-scev-cprop -ftree-sink -ftree-sra
 @ -ftree-switch-conversion -ftree-ter -ftree-vect-loop-version -ftree-vrp
 @ -funit-at-a-time -fvar-tracking -fverbose-asm -fwrapv
-@ -fzero-initialized-in-bss -mapcs-frame -mglibc -mlittle-endian
+@ -fzero-initialized-in-bss -mapcs-frame -mlittle-endian
 
 	.section	.debug_abbrev,"",%progbits
 .Ldebug_abbrev0:
@@ -65,7 +64,7 @@
 .Ldebug_line0:
 	.text
 .Ltext0:
-@ Compiler executable checksum: 74011fea7f66b1cda6b19363b6694363
+@ Compiler executable checksum: 4f440f375762a2d8810243af3f3bffab
 
 	.align	2
 	.global	foo
@@ -83,7 +82,6 @@ foo:
 	sub	fp, ip, #4	@,,
 .LCFI2:
 	.loc 1 16 0
-#APP
 @ 16 "kernel/bounds.c" 1
 	
 ->NR_PAGEFLAGS #20 __NR_PAGEFLAGS	@
@@ -466,6 +464,8 @@ foo:
 	.section	.debug_str,"MS",%progbits,1
 .LASF27:
 	.ascii	"PG_mappedtodisk\000"
+.LASF47:
+	.ascii	"/home/devinxtreme/kernels/mu_vc/linux-2.6.29\000"
 .LASF22:
 	.ascii	"PG_private\000"
 .LASF8:
@@ -532,8 +532,6 @@ foo:
 	.ascii	"char\000"
 .LASF39:
 	.ascii	"pageflags\000"
-.LASF47:
-	.ascii	"/home/jcureton/Desktop/mixup-vc/linux-2.6.29\000"
 .LASF10:
 	.ascii	"_Bool\000"
 .LASF16:
@@ -560,5 +558,4 @@ foo:
 	.ascii	"GNU C 4.4.1\000"
 .LASF34:
 	.ascii	"PG_savepinned\000"
-	.ident	"GCC: (Sourcery G++ Lite 2009q3-67) 4.4.1"
-	.section	.note.GNU-stack,"",%progbits
+	.ident	"GCC: (Sourcery G++ Lite 2009q3-68) 4.4.1"

@@ -9,6 +9,7 @@
 
 # Stuff needed for build, but hated for repos #
 ###############################################
+*.config
 .config
 vmlinux
 zImage

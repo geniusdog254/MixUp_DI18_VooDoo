@@ -1060,6 +1060,33 @@ static ssize_t get_SwitchingInitValue(struct device *dev, struct device_attribut
 static DEVICE_ATTR(SwitchingInitValue, S_IRUGO, get_SwitchingInitValue, NULL);
 
 
+static ssize_t rndis_enable_store(struct device *dev, struct device_attribute *attr, const char *buf, size_t count)
+{
+	unsigned long val;
+	int res;
+
+	if ((res = strict_strtoul(buf, 10, &val)) < 0)
+		return res;
+
+	switch (val) {
+	case 0:
+		if ((res = usb_switch_select(USBSTATUS_UMS)) < 0)
+			return res;
+		break;
+	case 1:
+		if ((res = usb_switch_select(USBSTATUS_RNDIS)) < 0)
+			return res;
+		break;
+	default:
+		return -EINVAL;
+	}
+
+	return count;
+}
+
+static DEVICE_ATTR(rndis_enable, S_IRUGO | S_IWUSR, NULL, rndis_enable_store);
+
+
 int  FSA9480_PMIC_CP_USB(void)
 {
 	int switch_sel;
@@ -1353,6 +1380,7 @@ void FSA9480_ProcessDevice(u8 dev1, u8 dev2, u8 attach)
 				}
 				else if(attach & FSA9480_INT1_DETACH)
 				{
+
 					DEBUG_FSA9480("FSA9480_DEV_TY2_JIG_USB_ON --- DETACH\n");
 					MicroJigUSBOnStatus = 0;
 #if 0	
@@ -1920,6 +1948,8 @@ static int fsa9480_codec_probe(struct i2c_adapter *adap, int addr, int kind)
 	if (device_create_file(switch_dev, &dev_attr_wimax_usb_state) < 0)
 		pr_err("Failed to create device file(%s)!\n", dev_attr_wimax_usb_state.attr.name);		
 #endif
+	if (device_create_file(switch_dev, &dev_attr_rndis_enable) < 0)
+		pr_err("Failed to create device file(%s)!\n", dev_attr_rndis_enable.attr.name);
 
 #if 1 //20100605_inchul
 		wake_lock_init(&cable_wake_lock, WAKE_LOCK_SUSPEND, "wimax_cable_connected");

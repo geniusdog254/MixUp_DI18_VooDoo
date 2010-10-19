@@ -184,6 +184,7 @@
 #define USBSTATUS_ADB					0x10
 #define USBSTATUS_DM					0x20
 #define USBSTATUS_ACM					0x30
+#define USBSTATUS_RNDIS					0x40
 
 //#define VODA
 
