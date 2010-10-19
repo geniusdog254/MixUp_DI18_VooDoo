@@ -37,6 +37,12 @@ Image
 */.*.cmd
 System.map
 usr/initramfs_data.img
+*.patch
+*.orig
+*.*.orig
+*.rej
+*.*.rej
+lib/lib.a
 
 # Packages #
 ############
