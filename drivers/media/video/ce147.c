@@ -2850,18 +2850,21 @@ static int ce147_set_sharpness(struct v4l2_subdev *sd, struct v4l2_control *ctrl
 	
 	switch(ctrl->value)
 	{
+		//Jesse C. - From default back shift the sharpness up a notch. You can still
+		//move back in the settings
 		case SHARPNESS_MINUS_2:
-			ce147_buf_set_saturation[1] = 0x01;
-		break;
-
-		case SHARPNESS_MINUS_1:
 			ce147_buf_set_saturation[1] = 0x02;
 		break;
 
-		case SHARPNESS_DEFAULT:
+		case SHARPNESS_MINUS_1:
 			ce147_buf_set_saturation[1] = 0x03;
 		break;
 
+		case SHARPNESS_DEFAULT:
+			ce147_buf_set_saturation[1] = 0x04;
+		break;
+
+		//From here on is normal
 		case SHARPNESS_PLUS_1:
 			ce147_buf_set_saturation[1] = 0x04;
 		break;
