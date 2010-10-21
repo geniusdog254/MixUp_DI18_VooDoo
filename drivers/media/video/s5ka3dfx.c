@@ -1277,12 +1277,14 @@ static int s5ka3dfx_g_ctrl(struct v4l2_subdev *sd, struct v4l2_control *ctrl)
 		break;
 
 	case V4L2_CID_SATURATION:
+		//Jesse C. - Up the saturation, no more vampire zombie faces.
 		ctrl->value = userset.saturation;
 		err = 0;
 		break;
 
 	case V4L2_CID_SHARPNESS:
-		ctrl->value = userset.saturation;
+		//Jesse C. - Take sharpness on front cam up a notch, people aren't blobs, Samsung.
+		ctrl->value = userset.saturation + 1;
 		err = 0;
 		break;
 
