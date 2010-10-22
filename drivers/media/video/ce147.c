@@ -2744,16 +2744,18 @@ static int ce147_set_saturation(struct v4l2_subdev *sd, struct v4l2_control *ctr
 	
 	switch(ctrl->value)
 	{
+		//Jesse C - Shift values from default back up a notch
+		//I like more vibrant photos
 		case SATURATION_MINUS_2:
-			ce147_buf_set_saturation[1] = 0x01;
-		break;
-
-		case SATURATION_MINUS_1:
 			ce147_buf_set_saturation[1] = 0x02;
 		break;
 
-		case SATURATION_DEFAULT:
+		case SATURATION_MINUS_1:
 			ce147_buf_set_saturation[1] = 0x03;
+		break;
+
+		case SATURATION_DEFAULT:
+			ce147_buf_set_saturation[1] = 0x04;
 		break;
 
 		case SATURATION_PLUS_1:

@@ -1,1 +1,0 @@
-cmd_drivers/rtc/built-in.o :=  /home/jcureton/Desktop/mixup-vc/arm-2009q3/bin/arm-none-linux-gnueabi-ld -EL    -r -o drivers/rtc/built-in.o drivers/rtc/rtc-lib.o drivers/rtc/hctosys.o drivers/rtc/rtc-core.o drivers/rtc/rtc-max8998.o drivers/rtc/rtc-s3c.o 

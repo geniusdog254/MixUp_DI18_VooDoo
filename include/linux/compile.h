@@ -1,8 +1,8 @@
-/* This file is auto generated, version 14 */
+/* This file is auto generated, version 22 */
 #define UTS_MACHINE "arm"
-#define UTS_VERSION "#14 Tue Oct 19 09:57:05 MDT 2010"
-#define LINUX_COMPILE_TIME "09:57:05"
-#define LINUX_COMPILE_BY "devinxtreme"
-#define LINUX_COMPILE_HOST "EpicLaptop"
+#define UTS_VERSION "#22 Thu Oct 21 18:05:04 CDT 2010"
+#define LINUX_COMPILE_TIME "18:05:04"
+#define LINUX_COMPILE_BY "jcureton"
+#define LINUX_COMPILE_HOST "jcureton-laptop"
 #define LINUX_COMPILE_DOMAIN ""
-#define LINUX_COMPILER "gcc version 4.4.1 (Sourcery G++ Lite 2009q3-68) "
+#define LINUX_COMPILER "gcc version 4.4.1 (Sourcery G++ Lite 2009q3-67) "
