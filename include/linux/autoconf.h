@@ -1,7 +1,7 @@
 /*
  * Automatically generated C config: don't edit
  * Linux kernel version: 2.6.29
- * Thu Oct 21 17:58:14 2010
+ * Sun Oct 24 20:02:05 2010
  */
 #define AUTOCONF_INCLUDED
 #define CONFIG_VIDEO_V4L1_COMPAT 1
@@ -357,6 +357,7 @@
 #define CONFIG_INET_ESP 1
 #define CONFIG_HAVE_PWM 1
 #define CONFIG_NET_IPIP 1
+#define CONFIG_INITRAMFS_COMPRESS 1
 #define CONFIG_NF_NAT_PPTP 1
 #define CONFIG_SPI_GPIO 1
 #define CONFIG_SHMEM 1

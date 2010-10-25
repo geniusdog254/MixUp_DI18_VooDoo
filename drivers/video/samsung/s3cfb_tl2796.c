@@ -39,8 +39,8 @@
 #define DATA_ONLY		0xFF
 
 //Geniusdog: Tweaks for dimmer on dimmest and minimum lower
-#define DIM_BL	19
-#define MIN_BL	27
+#define DIM_BL	18
+#define MIN_BL	25
 #define MAX_BL	255
 
 #define MAX_GAMMA_VALUE	24	// we have 25 levels. -> 16 levels -> 24 levels
