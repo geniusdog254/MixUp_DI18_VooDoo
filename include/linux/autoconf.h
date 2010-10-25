@@ -1,7 +1,7 @@
 /*
  * Automatically generated C config: don't edit
  * Linux kernel version: 2.6.29
- * Sun Oct 24 20:34:07 2010
+ * Mon Oct 25 01:44:58 2010
  */
 #define AUTOCONF_INCLUDED
 #define CONFIG_VIDEO_V4L1_COMPAT 1
@@ -276,7 +276,6 @@
 #define CONFIG_INPUT_MOUSEDEV 1
 #define CONFIG_ACCEL 1
 #define CONFIG_SND_C110_PCM 1
-#define CONFIG_BINFMT_AOUT 1
 #define CONFIG_RT_GROUP_SCHED 1
 #define CONFIG_CRYPTO_RNG2 1
 #define CONFIG_CRYPTO_HMAC 1
@@ -619,7 +618,7 @@
 #define CONFIG_REGULATOR_MAX8998 1
 #define CONFIG_VIDEO_V4L1 1
 #define CONFIG_MMC 1
-#define CONFIG_INITRAMFS_SOURCE "/home/jcureton/Desktop/mixup-vc/initramfs_list"
+#define CONFIG_INITRAMFS_SOURCE "/home/devinxtreme/kernels/mu_vc/initramfs_list"
 #define CONFIG_SND_UNIVERSAL_WM8994 1
 #define CONFIG_VIDEO_V4L2 1
 #define CONFIG_S3C_DEV_HSMMC 1

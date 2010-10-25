@@ -9,21 +9,20 @@
 	.eabi_attribute 30, 4
 	.eabi_attribute 18, 4
 	.file	"asm-offsets.c"
-@ GNU C (Sourcery G++ Lite 2009q3-67) version 4.4.1 (arm-none-linux-gnueabi)
+@ GNU C (Sourcery G++ Lite 2009q3-68) version 4.4.1 (arm-none-eabi)
 @	compiled by GNU C version 4.3.2, GMP version 4.3.1, MPFR version 2.4.1-p5.
 @ GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
 @ options passed:  -nostdinc -Iinclude
-@ -I/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include
+@ -I/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include
 @ -Iarch/arm/mach-s5pc110/include -Iarch/arm/plat-s5pc11x/include
 @ -Iarch/arm/plat-s3c/include
-@ -I/home/jcureton/Desktop/mixup-vc/modules/include -iprefix
-@ /home/jcureton/Desktop/mixup-vc/arm-2009q3/bin/../lib/gcc/arm-none-linux-gnueabi/4.4.1/
-@ -isysroot
-@ /home/jcureton/Desktop/mixup-vc/arm-2009q3/bin/../arm-none-linux-gnueabi/libc
-@ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm -DKBUILD_STR(s)=#s
-@ -DKBUILD_BASENAME=KBUILD_STR(asm_offsets)
+@ -I/home/devinxtreme/kernels/mu_vc/modules/include -iprefix
+@ /home/devinxtreme/kernels/arm-2009q3/bin/../lib/gcc/arm-none-eabi/4.4.1/
+@ -isysroot /home/devinxtreme/kernels/arm-2009q3/bin/../arm-none-eabi
+@ -D__USES_INITFINI__ -D__KERNEL__ -D__LINUX_ARM_ARCH__=7 -Uarm
+@ -DKBUILD_STR(s)=#s -DKBUILD_BASENAME=KBUILD_STR(asm_offsets)
 @ -DKBUILD_MODNAME=KBUILD_STR(asm_offsets) -isystem
-@ /home/jcureton/Desktop/mixup-vc/arm-2009q3/bin/../lib/gcc/arm-none-linux-gnueabi/4.4.1/include
+@ /home/devinxtreme/kernels/arm-2009q3/bin/../lib/gcc/arm-none-eabi/4.4.1/include
 @ -include include/linux/autoconf.h -MD arch/arm/kernel/.asm-offsets.s.d
 @ arch/arm/kernel/asm-offsets.c -mlittle-endian -marm -mapcs
 @ -mno-sched-prolog -mabi=aapcs-linux -mno-thumb-interwork -march=armv7-a
@@ -57,7 +56,7 @@
 @ -ftree-reassoc -ftree-scev-cprop -ftree-sink -ftree-sra
 @ -ftree-switch-conversion -ftree-ter -ftree-vect-loop-version -ftree-vrp
 @ -funit-at-a-time -fvar-tracking -fverbose-asm -fwrapv
-@ -fzero-initialized-in-bss -mapcs-frame -mglibc -mlittle-endian
+@ -fzero-initialized-in-bss -mapcs-frame -mlittle-endian
 
 	.section	.debug_abbrev,"",%progbits
 .Ldebug_abbrev0:
@@ -67,7 +66,7 @@
 .Ldebug_line0:
 	.text
 .Ltext0:
-@ Compiler executable checksum: 74011fea7f66b1cda6b19363b6694363
+@ Compiler executable checksum: 4f440f375762a2d8810243af3f3bffab
 
 	.align	2
 	.global	main
@@ -85,7 +84,6 @@ main:
 	sub	fp, ip, #4	@,,
 .LCFI2:
 	.loc 1 41 0
-#APP
 @ 41 "arch/arm/kernel/asm-offsets.c" 1
 	
 ->TSK_ACTIVE_MM #204 offsetof(struct task_struct, active_mm)	@
@@ -438,18 +436,18 @@ main:
 	.sleb128 4
 	.4byte	0x0
 	.4byte	0x0
-	.file 2 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/posix_types.h"
+	.file 2 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/posix_types.h"
 	.file 3 "include/asm-generic/int-ll64.h"
-	.file 4 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/types.h"
+	.file 4 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/types.h"
 	.file 5 "include/linux/types.h"
 	.file 6 "include/linux/capability.h"
 	.file 7 "include/linux/thread_info.h"
 	.file 8 "include/linux/time.h"
-	.file 9 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/fpstate.h"
-	.file 10 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/thread_info.h"
-	.file 11 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/system.h"
+	.file 9 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/fpstate.h"
+	.file 10 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/thread_info.h"
+	.file 11 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/system.h"
 	.file 12 "include/linux/sched.h"
-	.file 13 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/processor.h"
+	.file 13 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/processor.h"
 	.file 14 "include/linux/list.h"
 	.file 15 "include/linux/spinlock_types_up.h"
 	.file 16 "include/linux/spinlock_types.h"
@@ -463,9 +461,9 @@ main:
 	.file 24 "include/linux/wait.h"
 	.file 25 "include/linux/kernel.h"
 	.file 26 "include/linux/completion.h"
-	.file 27 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/page.h"
+	.file 27 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/page.h"
 	.file 28 "include/linux/mm_types.h"
-	.file 29 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/mmu.h"
+	.file 29 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/mmu.h"
 	.file 30 "include/linux/fs.h"
 	.file 31 "include/linux/mm.h"
 	.file 32 "include/asm-generic/cputime.h"
@@ -475,7 +473,7 @@ main:
 	.file 36 "include/linux/rcupdate.h"
 	.file 37 "include/linux/rcuclassic.h"
 	.file 38 "include/linux/sem.h"
-	.file 39 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/signal.h"
+	.file 39 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/signal.h"
 	.file 40 "include/asm-generic/signal.h"
 	.file 41 "include/asm-generic/siginfo.h"
 	.file 42 "include/linux/signal.h"
@@ -508,9 +506,9 @@ main:
 	.file 69 "include/linux/dqblk_qtree.h"
 	.file 70 "include/linux/nfs_fs_i.h"
 	.file 71 "include/linux/vmstat.h"
-	.file 72 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/hwcap.h"
+	.file 72 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/hwcap.h"
 	.file 73 "include/linux/timex.h"
-	.file 74 "/home/jcureton/Desktop/mixup-vc/linux-2.6.29/arch/arm/include/asm/mmzone.h"
+	.file 74 "/home/devinxtreme/kernels/mu_vc/linux-2.6.29/arch/arm/include/asm/mmzone.h"
 	.section	.debug_info
 	.4byte	0x6bee
 	.2byte	0x2
@@ -15759,8 +15757,6 @@ main:
 	.ascii	"uaddr\000"
 .LASF40:
 	.ascii	"time_t\000"
-.LASF1304:
-	.ascii	"/home/jcureton/Desktop/mixup-vc/linux-2.6.29\000"
 .LASF936:
 	.ascii	"dqb_itime\000"
 .LASF552:
@@ -16813,6 +16809,8 @@ main:
 	.ascii	"qs_pending\000"
 .LASF1112:
 	.ascii	"truncate\000"
+.LASF1304:
+	.ascii	"/home/devinxtreme/kernels/mu_vc/linux-2.6.29\000"
 .LASF1122:
 	.ascii	"fiemap\000"
 .LASF1043:
@@ -18195,5 +18193,4 @@ main:
 	.ascii	"sa_mask\000"
 .LASF750:
 	.ascii	"cmin_flt\000"
-	.ident	"GCC: (Sourcery G++ Lite 2009q3-67) 4.4.1"
-	.section	.note.GNU-stack,"",%progbits
+	.ident	"GCC: (Sourcery G++ Lite 2009q3-68) 4.4.1"
