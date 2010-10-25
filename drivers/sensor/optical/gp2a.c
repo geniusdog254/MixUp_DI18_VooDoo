@@ -235,31 +235,18 @@ static void gp2a_work_func_light(struct work_struct *work)
 	gprintk("cur_state = %d\n",cur_state);
 	gprintk("light_enable = %d\n",light_enable);
 #if 1 //add 150lux
-	if(adc >= 2100)
+
+	if(adc >= 1900)
 	{
 		level_state = LIGHT_LEVEL5;
 		buffering = 5;
-	}
-
-	else if(adc >= 1900 && adc < 2100)
-	{
-		if(buffering == 5)
-		{	
-			level_state = LIGHT_LEVEL5;
-			buffering = 5;
-		}
-		else if((buffering == 1)||(buffering == 2)||(buffering == 3)||(buffering == 4))
-		{
-			level_state = LIGHT_LEVEL4;
-			buffering = 4;
-		}
-		}			
+	}			
 			
 	else if(adc >= 1800 && adc < 1900)
 	{
 		level_state = LIGHT_LEVEL4;
 		buffering = 4;
-			}
+	}
 
 	else if(adc >= 1200 && adc < 1800)
 	{
@@ -273,15 +260,9 @@ static void gp2a_work_func_light(struct work_struct *work)
 			level_state = LIGHT_LEVEL3;
 			buffering = 3;
 		}
-				}
+	}
 
-	else if(adc >= 800 && adc < 1200)
-	{
-		level_state = LIGHT_LEVEL3;
-		buffering = 3;
-			}
-
-	else if(adc >= 600 && adc < 800)
+	else if(adc >= 400 && adc < 1200)
 	{
 		if((buffering == 3)||(buffering == 4)||(buffering == 5))
 		{	
@@ -294,29 +275,15 @@ static void gp2a_work_func_light(struct work_struct *work)
 			buffering = 2;
 		}
 	}
-	
-	else if(adc >= 400 && adc < 600)
-	{
-		level_state = LIGHT_LEVEL3;
-		buffering = 2;
-}
 
-	else if(adc >= 250 && adc < 400)
+	else if(adc >= 25 && adc < 400)
 	{
 		level_state = LIGHT_LEVEL2;
 		buffering = 2;
 	}
 	
-	//Jesse C. - I'm done screwing with Samsung's shitty logic here.
-	//the code seems legit, but the reasoning is weak. Here, this
-	//should fix the minimum brightness issue. About goddamn time.
-	else if(adc >= 35 && adc < 250)
-	{
-		level_state = LIGHT_LEVEL2;
-		buffering = 1;
-	}
 
-	else if (adc < 35)
+	else if (adc < 25)
 	{
 		level_state = LIGHT_LEVEL1;
 		buffering = 1;
