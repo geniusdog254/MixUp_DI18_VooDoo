@@ -76,13 +76,14 @@ enum PMIC_VOLTAGE {
 
 /* frequency voltage matching table */
 static const unsigned int frequency_match_1GHZ[][2] = {
-/* frequency, Mathced VDD ARM voltage , Matched VDD INT*/
+/* frequency, Matched VDD ARM voltage , Matched VDD INT*/
+//Jesse C - ^^ Learn to type, Samsung ;)
 #if 1
-        {1275, 1100}, /* 1.2GHz */
+        {1300, 1100}, /* 1.2GHz */
         {1250, 1100}, /* 1.0GHz */
-        {1175, 1100}, /* 0.8GHz */
-        {1025, 1100}, /* 0.6GHz */
-        { 975, 1100}, /* 0.4GHz */
+        {1150, 1100}, /* 0.8GHz */
+        {1000, 1100}, /* 0.6GHz */
+        {1000, 1100}, /* 0.4GHz */
         { 950, 1100}, /* 0.2GHz */
         { 950, 1000}, /* 0.1GHz */
 #else //just for dvs test
@@ -107,10 +108,10 @@ const unsigned int (*frequency_match[2])[2] = {
 };
 
 /*  voltage table */
-static const unsigned int voltage_table[19] = {
-	750, 800, 850, 900, 925, 950, 975, 1025,
-	1100, 1125, 1175, 1200, 1250, 1275, 1300, 
-	1350, 1400, 1450, 1500
+static const unsigned int voltage_table[16] = {
+	750, 800, 850, 900, 950, 1000,
+	1050, 1100, 1150, 1200, 1250,
+	1300, 1350, 1400, 1450, 1500
 };
 
 extern unsigned int S5PC11X_FREQ_TAB;

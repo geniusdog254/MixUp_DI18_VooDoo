@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * wm8994.c  --  WM8994 ALSA Soc Audio driver
  *
  * Copyright 2010 Wolfson Microelectronics PLC.
@@ -310,7 +310,7 @@ static int proc_write_ttymode(struct file *file, const char *buffer, unsigned lo
     return strnlen(buf, len);
 }
 
-/*   ÿ tty_mode   */
+/*   ï¿½ tty_mode   */
 static int init_tty_mode_procfs(void)
 {
     int ret = 0;
@@ -350,7 +350,7 @@ static int init_tty_mode_procfs(void)
     return ret;
 }
 
-/*  ÿ tty_mode   */
+/*  ï¿½ tty_mode   */
 static void cleanup_tty_mode_procfs(void)
 {
     remove_proc_entry("tty_mode", tty_procfs_dir);
@@ -432,7 +432,7 @@ static int proc_write_loopback_mode(struct file *file, const char *buffer, unsig
     return strnlen(buf, len);
 }
 
-/*   ÿ tty_mode   */
+/*   ï¿½ tty_mode   */
 static int init_loopback_mode_procfs(void)
 {
     int ret = 0;

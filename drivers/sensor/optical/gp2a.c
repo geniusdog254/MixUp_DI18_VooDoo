@@ -51,6 +51,10 @@ struct class *lightsensor_class;
 
 struct device *switch_cmd_dev;
 
+//Jesse C. - Not sure where to throw this in, so I'll add it here.
+//Where are the other LIGHT_LEVEL values defined?
+int LIGHT_UBERDIM = 0;
+
 int autobrightness_mode = OFF;
 static bool light_enable = OFF;
 static bool proximity_enable = OFF;
@@ -276,16 +280,22 @@ static void gp2a_work_func_light(struct work_struct *work)
 		}
 	}
 
-	else if(adc >= 25 && adc < 400)
+	else if(adc >= 100 && adc < 400)
 	{
 		level_state = LIGHT_LEVEL2;
 		buffering = 2;
 	}
 	
 
-	else if (adc < 25)
+	else if (adc >= 10 && adc < 100)
 	{
 		level_state = LIGHT_LEVEL1;
+		buffering = 1;
+	}
+	else if (adc < 10)
+	{
+		//Jesse C. - New brightness level here.
+		level_state = LIGHT_UBERDIM;
 		buffering = 1;
 	}
 #endif
@@ -377,7 +387,8 @@ static enum hrtimer_restart gp2a_timer_func(struct hrtimer *timer)
 	queue_work(gp2a_wq, &gp2a->work_light);
 	//hrtimer_start(&gp2a->timer,ktime_set(LIGHT_PERIOD,0),HRTIMER_MODE_REL);
 	light_polling_time = ktime_set(0,0);
-	light_polling_time = ktime_add_us(light_polling_time,500000);
+	//Jesse C. - This used to be 500000, this should poll 20% more often now, but it may be limited in framework
+	light_polling_time = ktime_add_us(light_polling_time,400000);
 	hrtimer_start(&gp2a->timer,light_polling_time,HRTIMER_MODE_REL);
 	return HRTIMER_NORESTART;
 }
@@ -1190,6 +1201,10 @@ static double StateToLux(state_type state)
 		lux = 1000.0;
 	}
 	else if(state == LIGHT_LEVEL1){
+		lux = 10.0;
+	}
+	//Jesse C. - New light level, for ultra low light. Keeps it bright most of the time
+	else if(state == LIGHT_UBERDIM){
 		lux = 6.0;
 	}
 

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  * wm8994_aries.c  --  WM8994 ALSA Soc Audio driver related Aries
  *
  *  Copyright (C) 2010 Samsung Electronics.
@@ -317,7 +317,7 @@ void audio_ctrl_mic_bias_gpio(int enable)
 	{
 		set_recording_status(0);
 		headset_state = get_headset_status();
-		//ashton codec shutdown ½Ã mic bias disable
+		//ashton codec shutdown ï¿½ï¿½ mic bias disable
 		//if( headset_state == 0 ||headset_state == 0x1 << 5 )	// TV out or no headset
 		//{
 		//	DEBUG_LOG("enable = [%d]", enable);
@@ -2307,7 +2307,7 @@ void wm8994_set_voicecall_receiver(struct snd_soc_codec *codec)
         val = wm8994_read(codec, 0x0020);
         val &= ~(WM8994_MIXOUTL_MUTE_N_MASK | WM8994_MIXOUTL_VOL_MASK);
         val |= (0x0100 | 0x0040 | TUNING_RCV_OPGAL_VOL);
-        wm8994_write(codec,0x0020, 0x01F9);//05.24 Maximum ´ëºñ -6dB HAC ¿ë test -2 3B -> 39
+        wm8994_write(codec,0x0020, 0x01F9);//05.24 Maximum ï¿½ï¿½ï¿½ -6dB HAC ï¿½ï¿½ test -2 3B -> 39
         
 
         /* Right OPGA Volume */
