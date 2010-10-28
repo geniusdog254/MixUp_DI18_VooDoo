@@ -44,6 +44,34 @@ usr/initramfs_data.img
 *.rej
 *.*.rej
 lib/lib.a
+Module.symvers
+arch/arm/boot/compressed/.piggy.gz.cmd
+arch/arm/kernel/.asm-offsets.s.cmd
+arch/arm/kernel/.vmlinux.lds.cmd
+arch/arm/kernel/asm-offsets.s
+arch/arm/lib/.lib.a.cmd
+arch/arm/lib/lib.a
+drivers/scsi/.scsi_wait_scan.ko.cmd
+drivers/scsi/scsi_wait_scan.ko
+drivers/scsi/scsi_wait_scan.mod.c
+include/asm-arm/asm-offsets.h
+include/linux/autoconf.h
+include/linux/bounds.h
+include/linux/compile.h
+include/linux/utsrelease.h
+include/linux/version.h
+kernel/bounds.s
+scripts/basic/.docproc.cmd
+scripts/basic/.fixdep.cmd
+scripts/basic/.hash.cmd
+scripts/kconfig/.conf.cmd
+scripts/kconfig/.mconf.cmd
+scripts/mod/.elfconfig.h.cmd
+scripts/mod/.mk_elfconfig.cmd
+scripts/mod/.modpost.cmd
+include/config
+include/asm
+
 
 # Packages #
 ############
