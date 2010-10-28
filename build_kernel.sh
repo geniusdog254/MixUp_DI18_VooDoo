@@ -10,6 +10,7 @@ PRODUCE_TAR=n
 PRODUCE_ZIP=y
 TARGET="aries_rev02"
 THREADS=3
+PUSH_ZIP=n
 VERSION=$(date +%m%d%Y)
 
 SHOW_HELP()
@@ -22,14 +23,16 @@ SHOW_HELP()
 	echo "-h : Print this help."
 	echo "-j : Use a specified number of threads to build."
 	echo "     For example, use -j4 to make with 4 threads."
+	echo "-p : Push the compiled .zip file to /sdcard for flashing."
+	echo "	   Dependent on the -z option."
 	echo "-t : Produce tar file suitable for flashing with Odin."
-	echo "-z : Produce zip file suitable for flashing via Recovery."
+	echo "-z : Produce zip file suitable for flashing via Recovery. Requires p7zip installed."
 	echo
 	exit 1
 }
 
 # Get values from Args
-set -- $(getopt cd:hj:tz "$@")
+set -- $(getopt cd:hj:pt:z "$@")
 while [ $# -gt 0 ]
 do
 	case "$1" in
@@ -37,6 +40,7 @@ do
 	(-d) DEFCONFIG=y; TARGET="$2"; shift;;
 	(-h) SHOW_HELP;;
 	(-j) THREADS=$2; shift;;
+	(-p) PUSH_ZIP=y;;
 	(-t) PRODUCE_TAR=y;;
 	(-z) PRODUCE_ZIP=y;;
 	(--) shift; break;;
@@ -46,6 +50,9 @@ do
 	shift
 done
 
+echo "--------------------------------"
+echo "Build options:"
+echo
 echo "make clean    == "$CLEAN
 echo "use defconfig == "$DEFCONFIG
 echo "build target  == "$TARGET
@@ -53,6 +60,10 @@ echo "make threads  == "$THREADS
 echo "build kernel  == "$BUILD_KERNEL
 echo "create tar    == "$PRODUCE_TAR
 echo "create zip    == "$PRODUCE_ZIP
+echo "push to phone == "$PUSH_ZIP
+echo
+echo "--------------------------------"
+echo
 
 if [ "$CLEAN" = "y" ] ; then
 	echo "Cleaning source directory." && echo ""
@@ -82,9 +93,21 @@ if [ "$PRODUCE_ZIP" = y ] ; then
 	rm -fr "$TARGET-$VERSION.zip"
 	rm -f update/kernel_update/zImage
 	cp arch/arm/boot/zImage update/kernel_update
-	OUTFILE="$PWD/$TARGET-$VERSION.zip"
+	OUTFILE="$PWD/zips/$TARGET-$VERSION.zip"
 	cd update
 	eval "$MKZIP" >/dev/null 2>&1
+	echo "Finished .zip creation."
 	cd ..
-	mv $"OUTFILE"-signed "$OUTFILE"
+fi
+
+if [ "$PUSH_ZIP" = y ] ; then
+	if [ "$PRODUCE_ZIP" = y ] ; then
+		echo "Pushing $TARGET-$VERSION.zip to /sdcard/$TARGET-$VERSION.zip for flashing" && echo ""
+		OUTFILE="$PWD/zips/$TARGET-$VERSION.zip"
+		adb push $OUTFILE /sdcard
+		echo "Pushing finished."
+	fi
+	if [ "$PRODUCE_ZIP" = n ] ; then
+		echo "Skipping push: -z argument not included. Since file may not be current, don't push it."
+	fi
 fi
