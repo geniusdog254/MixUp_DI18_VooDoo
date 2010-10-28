@@ -43,17 +43,12 @@
 
 extern unsigned int system_rev;
 
-
 /* global var */
 static struct i2c_client *opt_i2c_client = NULL;
 
 struct class *lightsensor_class;
 
 struct device *switch_cmd_dev;
-
-//Jesse C. - Not sure where to throw this in, so I'll add it here.
-//Where are the other LIGHT_LEVEL values defined?
-int LIGHT_UBERDIM = 0;
 
 int autobrightness_mode = OFF;
 static bool light_enable = OFF;
