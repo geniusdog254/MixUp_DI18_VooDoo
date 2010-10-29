@@ -71,6 +71,8 @@ scripts/mod/.mk_elfconfig.cmd
 scripts/mod/.modpost.cmd
 include/config
 include/asm
+build_kernel.sh
+/arch/arm/configs/aries_rev02_defconfig
 
 
 # Packages #
