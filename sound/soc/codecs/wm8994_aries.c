@@ -173,9 +173,12 @@ extern unsigned int tty_mode;
 extern unsigned int loopback_mode;
 
 
-#ifdef CONFIG_SND_VOODOO_SOUND_HEADPHONE_AMP_GAIN
-// Voodoo sound
+#ifdef CONFIG_SND_VOODOO_SOUND_RETUNE_EQ
+// by default the anti-alias filter is disabled
+unsigned short voodoo_anti_alias_filter = 0;
+#endif
 
+#ifdef CONFIG_SND_VOODOO_SOUND_HEADPHONE_AMP_GAIN
 // Creating variables which we will use to save the headphone amplifier
 // gain chose by the user through sysfs interface
 // min: 0x0, max 3B ( 3C -> 3F = saturation & distortion )
@@ -191,9 +194,16 @@ struct device *voodoo_sound_dev;
 
 // Voodoo sound: headphone amplifier gain
 
-static void voodoo_update_headphone_volumes()
+void voodoo_update_headphone_volumes(void)
 {
 	unsigned short val;
+
+	// hard limit to 61 because 62 and 63 introduce distortion
+	if (voodoo_headphone_left_volume > 62)
+		voodoo_headphone_left_volume = 62;
+	if (voodoo_headphone_right_volume > 62)
+		voodoo_headphone_right_volume = 62;
+
 	// we don't need the Volume Update flag when sending the first volume
 	//printk("Voodoo sound: setting headphone volume: left %u\n", voodoo_headphone_left_volume);
 	val = (WM8994_HPOUT1L_MUTE_N | voodoo_headphone_left_volume);
@@ -248,7 +258,6 @@ static ssize_t gain_store(struct device *dev,
 static DEVICE_ATTR(gain_lr,0666, gain_lr_show, gain_lr_store);
 // create the sysfs device to allow read and write
 static DEVICE_ATTR(gain,0666, gain_show, gain_store);
-
 #endif
 
 
@@ -272,13 +281,68 @@ static ssize_t wm8994_write_store(struct device *dev,
 {
 	short unsigned int register_address = 0x0;
 	short unsigned int val = 0x0;
-	if (sscanf(buf, "%hx %hx", &register_address, &val) != 1)
+	if (sscanf(buf, "%hx %hx", &register_address, &val) == 2)
 		wm8994_write(voodoo_codec, register_address, val);
 
 	return size;
 }
 
 static DEVICE_ATTR(wm8994_write,0600, wm8994_write_show, wm8994_write_store);
+#endif
+
+
+#ifdef CONFIG_SND_VOODOO_SOUND_RETUNE_EQ
+// Voodoo sound: use the hardware parametric equalizer
+
+void voodoo_update_anti_alias_filter(void)
+{
+
+	// Use the parametric EQ to create an anti-alias filter
+	// printk("Voodoo sound: applying anti-alias filter\n");
+
+	if (voodoo_anti_alias_filter == 1)
+	{
+		// anti-alias 1 (only high-shelf)
+		wm8994_write(voodoo_codec, 0x480, 0x6319);
+		wm8994_write(voodoo_codec, 0x481, 0x6000);
+		wm8994_write(voodoo_codec, 0x491, 0xF692);
+		wm8994_write(voodoo_codec, 0x492, 0x0400);
+		wm8994_write(voodoo_codec, 0x493, 0x1A48);
+	}
+	if (voodoo_anti_alias_filter == 2)
+	{
+		// anti alias 2 (1 parametric band + high-shelf)
+		wm8994_write(voodoo_codec, 0x480, 0x6319);
+		wm8994_write(voodoo_codec, 0x481, 0x0000);
+		wm8994_write(voodoo_codec, 0x48D, 0xE386);
+		wm8994_write(voodoo_codec, 0x48E, 0xF1B2);
+		wm8994_write(voodoo_codec, 0x48F, 0x040A);
+		wm8994_write(voodoo_codec, 0x490, 0x06B7);
+		wm8994_write(voodoo_codec, 0x491, 0xF474);
+		wm8994_write(voodoo_codec, 0x492, 0x0400);
+		wm8994_write(voodoo_codec, 0x493, 0x11D0);
+	}
+}
+
+static ssize_t anti_alias_filter_show(struct device *dev,
+        struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf,"%hu\n",voodoo_anti_alias_filter);
+	return 0;
+}
+
+static ssize_t anti_alias_filter_store(struct device *dev,
+        struct device_attribute *attr, const char *buf, size_t size)
+{
+	sscanf(buf, "%hu", &voodoo_anti_alias_filter);
+	if (voodoo_anti_alias_filter > 2)
+		voodoo_anti_alias_filter = 0;
+
+	voodoo_update_anti_alias_filter();
+	return size;
+}
+
+static DEVICE_ATTR(anti_alias_filter,0666, anti_alias_filter_show, anti_alias_filter_store);
 #endif
 
 
@@ -303,6 +367,15 @@ int voodoo_sound_init(struct snd_soc_codec *codec)
 		pr_err("Failed to create device file(%s)!\n", dev_attr_gain_lr.attr.name);
 	if (device_create_file(voodoo_sound_dev, &dev_attr_gain) < 0)
 		pr_err("Failed to create device file(%s)!\n", dev_attr_gain.attr.name);
+#endif
+
+#ifdef CONFIG_SND_VOODOO_SOUND_RETUNE_EQ
+	printk("Voodoo sound: ReTune parametric EQ activated\n");
+	voodoo_sound_dev = device_create(voodoo_sound_class, NULL, 0, NULL, "parametric_equalizer");
+	if (IS_ERR(voodoo_sound_dev))
+		pr_err("Failed to create device(voodoo_sound_dev)!\n");
+	if (device_create_file(voodoo_sound_dev, &dev_attr_anti_alias_filter) < 0)
+		pr_err("Failed to create device file(%s)!\n", dev_attr_anti_alias_filter.attr.name);
 #endif
 
 #ifdef CONFIG_SND_VOODOO_SOUND_WM8994_WRITE
@@ -1618,7 +1691,11 @@ void wm8994_set_playback_headset(struct snd_soc_codec *codec)
 			val |= (WM8994_HPOUT1_VU | WM8994_HPOUT1R_MUTE_N | TUNING_MP3_OUTPUTR_VOL);
 #endif
 		wm8994_write(codec, WM8994_RIGHT_OUTPUT_VOLUME, val);
-	
+
+
+#ifdef CONFIG_SND_VOODOO_SOUND_RETUNE_EQ
+		voodoo_update_anti_alias_filter();
+#endif
 
 		val = wm8994_read(codec, WM8994_LEFT_OPGA_VOLUME);
 		val &= ~(WM8994_MIXOUTL_MUTE_N_MASK | WM8994_MIXOUTL_VOL_MASK);

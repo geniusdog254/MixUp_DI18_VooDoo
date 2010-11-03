@@ -91,6 +91,14 @@ config	SND_VOODOO_SOUND_HEADPHONE_AMP_GAIN
           Say Y if you want to activate control of the headphone gain through
 	  the sysfs interface
 
+config	SND_VOODOO_SOUND_RETUNE_EQ
+	bool "ReTune parametric hardware equalizer"
+	depends on SND_VOODOO_SOUND
+	default y
+	help
+	  Say Y if you want to activate Wolfson ReTune paremetric hardware
+	  equalizer controls
+
 config	SND_VOODOO_SOUND_WM8994_READ
 	bool "Expose the wm8994_read function"
 	depends on SND_VOODOO_SOUND
