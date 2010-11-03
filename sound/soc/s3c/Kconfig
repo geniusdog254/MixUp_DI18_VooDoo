@@ -75,6 +75,40 @@ config SND_S5PC100_SOC_UNIVERSAL_AK4671
 	  Say Y if you want to add support for SoC audio on universal
 	  with the AK4671.
 
+config	SND_VOODOO_SOUND
+	bool "Voodoo sound"
+	depends on SND_ARIES_SOC_WM8994
+	default y
+	help
+	  Say Y if you want to activate Voodoo sound extensions
+	  like the headphone amp gain hardware control
+
+config	SND_VOODOO_SOUND_HEADPHONE_AMP_GAIN
+	bool "Headphone amp gain control"
+	depends on SND_VOODOO_SOUND
+	default y
+	help
+          Say Y if you want to activate control of the headphone gain through
+	  the sysfs interface
+
+config	SND_VOODOO_SOUND_WM8994_READ
+	bool "Expose the wm8994_read function"
+	depends on SND_VOODOO_SOUND
+	default n
+	help
+	  Say Y if you want to be able to read values in the regisers of the
+	  WM8994 codec (debugging)
+
+config	SND_VOODOO_SOUND_WM8994_WRITE
+	bool "Expose the wm8994_write function"
+	depends on SND_VOODOO_SOUND
+	default n
+	help
+	  Say Y if you want to be able to send abritrary commands to the
+	  WM8994 sound codec through the sysfs interface
+	  This option is dangerous and should be used only carefuly after
+	  some serious specsheet reading.
+
 config  SND_SMDK6442_WM8580
 	tristate "WM8580-I2S on SMDK6442"
 	depends on ARCH_S5P64XX

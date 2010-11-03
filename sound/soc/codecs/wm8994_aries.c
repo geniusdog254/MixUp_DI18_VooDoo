@@ -172,6 +172,155 @@ extern void set_recording_status(int value);	// For preventing MIC Bias off on u
 extern unsigned int tty_mode;
 extern unsigned int loopback_mode;
 
+
+#ifdef CONFIG_SND_VOODOO_SOUND_HEADPHONE_AMP_GAIN
+// Voodoo sound
+
+// Creating variables which we will use to save the headphone amplifier
+// gain chose by the user through sysfs interface
+// min: 0x0, max 3B ( 3C -> 3F = saturation & distortion )
+unsigned short voodoo_headphone_left_volume = TUNING_MP3_OUTPUTL_VOL;
+unsigned short voodoo_headphone_right_volume = TUNING_MP3_OUTPUTR_VOL;
+
+// here we make a copy of the strucure codec. It will be useful
+struct snd_soc_codec *voodoo_codec;
+
+struct class *voodoo_sound_class;
+struct device *voodoo_sound_dev;
+
+
+// Voodoo sound: headphone amplifier gain
+
+static void voodoo_update_headphone_volumes()
+{
+	unsigned short val;
+	// we don't need the Volume Update flag when sending the first volume
+	//printk("Voodoo sound: setting headphone volume: left %u\n", voodoo_headphone_left_volume);
+	val = (WM8994_HPOUT1L_MUTE_N | voodoo_headphone_left_volume);
+	val |= WM8994_HPOUT1L_ZC  << WM8994_HPOUT1L_ZC_SHIFT;
+	wm8994_write(voodoo_codec, WM8994_LEFT_OUTPUT_VOLUME, val);
+
+	// this time we write the right volume plus the Volume Update flag. This way, both
+	// volume are set at the same time	
+	//printk("Voodoo sound: setting headphone volume: right %u\n", voodoo_headphone_right_volume);
+	val = (WM8994_HPOUT1_VU | WM8994_HPOUT1R_MUTE_N | voodoo_headphone_right_volume);
+	val |= WM8994_HPOUT1R_ZC  << WM8994_HPOUT1R_ZC_SHIFT;
+	wm8994_write(voodoo_codec, WM8994_RIGHT_OUTPUT_VOLUME, val);
+}
+
+
+static ssize_t gain_lr_show(struct device *dev,
+        struct device_attribute *attr, char *buf)
+{
+	return sprintf(buf,"%u %u\n",voodoo_headphone_left_volume, voodoo_headphone_right_volume);
+}
+static ssize_t gain_lr_store(struct device *dev,
+        struct device_attribute *attr, const char *buf, size_t size)
+{
+	if (sscanf(buf, "%hu %hu", &voodoo_headphone_left_volume, &voodoo_headphone_right_volume) == 2)
+		voodoo_update_headphone_volumes();
+	return size;
+}
+
+
+static ssize_t gain_show(struct device *dev,
+        struct device_attribute *attr, char *buf)
+{
+	// output the median of left and right volumes
+	return sprintf(buf,"%u\n", (voodoo_headphone_left_volume + voodoo_headphone_right_volume) / 2 );
+}
+
+static ssize_t gain_store(struct device *dev,
+        struct device_attribute *attr, const char *buf, size_t size)
+{
+	unsigned short volume;
+	if (sscanf(buf, "%hu", &volume) == 1)
+	{
+		// left and right are set to the same volumes
+		voodoo_headphone_left_volume = voodoo_headphone_right_volume = volume;
+		voodoo_update_headphone_volumes();
+	}
+	return size;
+}
+
+
+// create the sysfs device to allow read and write
+static DEVICE_ATTR(gain_lr,0666, gain_lr_show, gain_lr_store);
+// create the sysfs device to allow read and write
+static DEVICE_ATTR(gain,0666, gain_show, gain_store);
+
+#endif
+
+
+
+#ifdef CONFIG_SND_VOODOO_SOUND_WM8994_READ
+// TODO
+#endif
+
+
+#ifdef CONFIG_SND_VOODOO_SOUND_WM8994_WRITE
+// Voodoo sound: send abitrary command to the sound chip
+static ssize_t wm8994_write_show(struct device *dev,
+        struct device_attribute *attr, char *buf)
+{
+	//wm8994_register_dump(voodoo_codec);
+	return 0;
+}
+
+static ssize_t wm8994_write_store(struct device *dev,
+        struct device_attribute *attr, const char *buf, size_t size)
+{
+	short unsigned int register_address = 0x0;
+	short unsigned int val = 0x0;
+	if (sscanf(buf, "%hx %hx", &register_address, &val) != 1)
+		wm8994_write(voodoo_codec, register_address, val);
+
+	return size;
+}
+
+static DEVICE_ATTR(wm8994_write,0600, wm8994_write_show, wm8994_write_store);
+#endif
+
+
+
+// Voodoo sound initialization
+#ifdef CONFIG_SND_VOODOO_SOUND
+int voodoo_sound_init(struct snd_soc_codec *codec)
+{
+	// Create the sysfs class
+	printk("Voodoo sound: enabled\n");
+	voodoo_sound_class = class_create(THIS_MODULE, "voodoo_sound");
+	if (IS_ERR(voodoo_sound_class))
+		pr_err("Failed to create class(voodoo_sound_class)!\n");
+
+#ifdef CONFIG_SND_VOODOO_SOUND_HEADPHONE_AMP_GAIN
+	// Create the sysfs device
+	printk("Voodoo sound: headphone amplifier gain control activated\n");
+	voodoo_sound_dev = device_create(voodoo_sound_class, NULL, 0, NULL, "headphone_amplifier");
+	if (IS_ERR(voodoo_sound_dev))
+		pr_err("Failed to create device(voodoo_sound_dev)!\n");
+	if (device_create_file(voodoo_sound_dev, &dev_attr_gain_lr) < 0)
+		pr_err("Failed to create device file(%s)!\n", dev_attr_gain_lr.attr.name);
+	if (device_create_file(voodoo_sound_dev, &dev_attr_gain) < 0)
+		pr_err("Failed to create device file(%s)!\n", dev_attr_gain.attr.name);
+#endif
+
+#ifdef CONFIG_SND_VOODOO_SOUND_WM8994_WRITE
+	printk("Voodoo sound: wm8994 direct write to codec interface activated\n");
+	voodoo_sound_dev = device_create(voodoo_sound_class, NULL, 0, NULL, "wm8994_codec");
+	if (IS_ERR(voodoo_sound_dev))
+		pr_err("Failed to create device(voodoo_sound_dev)!\n");
+	if (device_create_file(voodoo_sound_dev, &dev_attr_wm8994_write) < 0)
+		pr_err("Failed to create device file(%s)!\n", dev_attr_wm8994_write.attr.name);
+#endif
+
+	// make a copy of the codec pointer named voodoo_codec
+	voodoo_codec = codec;
+	return 0;
+}
+#endif
+
+
 int audio_init(void)
 {
 
@@ -1450,7 +1599,11 @@ void wm8994_set_playback_headset(struct snd_soc_codec *codec)
 		if(wm8994->ringtone_active)
 			val |= (WM8994_HPOUT1_VU | WM8994_HPOUT1L_MUTE_N | TUNING_RING_OUTPUTL_VOL);
 		else
+#ifdef CONFIG_SND_VOODOO_SOUND_HEADPHONE_AMP_GAIN
+			val |= (WM8994_HPOUT1_VU | WM8994_HPOUT1L_MUTE_N | voodoo_headphone_left_volume);
+#else
 			val |= (WM8994_HPOUT1_VU | WM8994_HPOUT1L_MUTE_N | TUNING_MP3_OUTPUTL_VOL);
+#endif
 		wm8994_write(codec, WM8994_LEFT_OUTPUT_VOLUME, val);
 	
 
@@ -1459,7 +1612,11 @@ void wm8994_set_playback_headset(struct snd_soc_codec *codec)
 		if(wm8994->ringtone_active)
 			val |= (WM8994_HPOUT1_VU | WM8994_HPOUT1R_MUTE_N | TUNING_RING_OUTPUTR_VOL);
 		else
+#ifdef CONFIG_SND_VOODOO_SOUND_HEADPHONE_AMP_GAIN
+			val |= (WM8994_HPOUT1_VU | WM8994_HPOUT1R_MUTE_N | voodoo_headphone_right_volume);
+#else
 			val |= (WM8994_HPOUT1_VU | WM8994_HPOUT1R_MUTE_N | TUNING_MP3_OUTPUTR_VOL);
+#endif
 		wm8994_write(codec, WM8994_RIGHT_OUTPUT_VOLUME, val);
 	
 

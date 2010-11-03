@@ -49,6 +49,11 @@
 #define WM8994_VERSION "0.1"
 #define SUBJECT "wm8994.c"
 
+#ifdef CONFIG_SND_VOODOO_SOUND
+// declare this external function originated from wm8994_aries.c
+extern int voodoo_sound_init(struct snd_soc_codec *codec);
+#endif
+
 //------------------------------------------------
 // Definitions of clock related.
 //------------------------------------------------
@@ -2287,6 +2292,13 @@ static int wm8994_pcm_probe(struct platform_device *pdev)
 #else
                 /* Add other interfaces here */
 #endif
+
+
+#ifdef CONFIG_SND_VOODOO_SOUND
+		// Voodoo sound
+		voodoo_sound_init(codec);
+#endif
+
         return ret;
 }
 
