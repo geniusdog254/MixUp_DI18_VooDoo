@@ -371,7 +371,7 @@ int voodoo_sound_init(struct snd_soc_codec *codec)
 
 #ifdef CONFIG_SND_VOODOO_SOUND_RETUNE_EQ
 	printk("Voodoo sound: ReTune parametric EQ activated\n");
-	voodoo_sound_dev = device_create(voodoo_sound_class, NULL, 0, NULL, "parametric_equalizer");
+	voodoo_sound_dev = device_create(voodoo_sound_class, NULL, 0, NULL, "parametric_eq");
 	if (IS_ERR(voodoo_sound_dev))
 		pr_err("Failed to create device(voodoo_sound_dev)!\n");
 	if (device_create_file(voodoo_sound_dev, &dev_attr_anti_alias_filter) < 0)
