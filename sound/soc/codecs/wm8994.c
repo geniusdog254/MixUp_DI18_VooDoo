@@ -200,6 +200,9 @@ static unsigned int wm8994_read_hw(struct snd_soc_codec *codec, u16 reg)
 
 int wm8994_write(struct snd_soc_codec *codec, unsigned int reg, unsigned int value)
 {
+#ifdef CONFIG_SND_VOODOO_SOUND_WM8994_WRITE
+        DEBUG_LOG_ERR("register= [%X] value= [%X]", reg, value);
+#endif
 	u8 data[4];
 	int ret;
 	//BUG_ON(reg > WM8993_MAX_REGISTER);
