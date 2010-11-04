@@ -99,14 +99,6 @@ config	SND_VOODOO_SOUND_RETUNE_EQ
 	  Say Y if you want to activate Wolfson ReTune paremetric hardware
 	  equalizer controls
 
-config	SND_VOODOO_SOUND_WM8994_READ
-	bool "Expose the wm8994_read function"
-	depends on SND_VOODOO_SOUND
-	default n
-	help
-	  Say Y if you want to be able to read values in the regisers of the
-	  WM8994 codec (debugging)
-
 config	SND_VOODOO_SOUND_WM8994_WRITE
 	bool "Expose the wm8994_write function"
 	depends on SND_VOODOO_SOUND

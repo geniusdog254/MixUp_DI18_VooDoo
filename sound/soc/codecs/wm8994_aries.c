@@ -260,13 +260,6 @@ static DEVICE_ATTR(gain_lr,0666, gain_lr_show, gain_lr_store);
 static DEVICE_ATTR(gain,0666, gain_show, gain_store);
 #endif
 
-
-
-#ifdef CONFIG_SND_VOODOO_SOUND_WM8994_READ
-// TODO
-#endif
-
-
 #ifdef CONFIG_SND_VOODOO_SOUND_WM8994_WRITE
 // Voodoo sound: send abitrary command to the sound chip
 static ssize_t wm8994_write_show(struct device *dev,
