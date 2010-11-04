@@ -355,7 +355,7 @@ int voodoo_sound_init(struct snd_soc_codec *codec)
 #ifdef CONFIG_SND_VOODOO_SOUND_HEADPHONE_AMP_GAIN
 	// Create the sysfs device
 	printk("Voodoo sound: headphone amplifier gain control activated\n");
-	voodoo_sound_dev = device_create(voodoo_sound_class, NULL, 0, NULL, "headphone_amplifier");
+	voodoo_sound_dev = device_create(voodoo_sound_class, NULL, 0, NULL, "headphone_amp");
 	if (IS_ERR(voodoo_sound_dev))
 		pr_err("Failed to create device(voodoo_sound_dev)!\n");
 	if (device_create_file(voodoo_sound_dev, &dev_attr_gain_lr) < 0)
