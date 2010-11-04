@@ -272,7 +272,9 @@ static DEVICE_ATTR(gain,0666, gain_show, gain_store);
 static ssize_t wm8994_write_show(struct device *dev,
         struct device_attribute *attr, char *buf)
 {
-	//wm8994_register_dump(voodoo_codec);
+#ifdef CONFIG_SND_VOODOO_SOUND_WM8994_REGISTER_DUMP
+	wm8994_register_dump(voodoo_codec);
+#endif
 	return 0;
 }
 

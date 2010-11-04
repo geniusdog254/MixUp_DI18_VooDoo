@@ -117,6 +117,15 @@ config	SND_VOODOO_SOUND_WM8994_WRITE
 	  This option is dangerous and should be used only carefuly after
 	  some serious specsheet reading.
 
+config	SND_VOODOO_SOUND_WM8994_REGISTER_DUMP
+	bool "wm8994_register_dump on read operations on wm8994_write"
+	depends on SND_VOODOO_SOUND_WM8994_WRITE
+	default y
+	help
+	  Say Y if you want to be able to dump WM8994 codec's registers
+	  to dmesg
+
+
 config  SND_SMDK6442_WM8580
 	tristate "WM8580-I2S on SMDK6442"
 	depends on ARCH_S5P64XX
