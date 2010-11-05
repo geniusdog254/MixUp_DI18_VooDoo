@@ -73,19 +73,19 @@ enum PMIC_VOLTAGE {
 	VOUT_1_50 	
 };
 
-
 /* frequency voltage matching table */
 static const unsigned int frequency_match_1GHZ[][2] = {
 /* frequency, Matched VDD ARM voltage , Matched VDD INT*/
 //Jesse C - ^^ Learn to type, Samsung ;)
 #if 1
-         {1275, 1100}, /* 1.2GHz */	
-         {1250, 1100}, /* 1.0GHz */	
-         {1175, 1100}, /* 0.8GHz */
-         {1025, 1100}, /* 0.6GHz */	
-         { 975, 1100}, /* 0.4GHz */	
-         { 950, 1100}, /* 0.2GHz */	
-         { 950, 1000}, /* 0.1GHz */
+	{1300, 1100}, /* 1.6GHz */
+        {1275, 1100}, /* 1.2GHz */
+        {1250, 1100}, /* 1.0GHz */
+        {1175, 1100}, /* 0.8GHz */
+        {1025, 1100}, /* 0.6GHz */
+        { 975, 1100}, /* 0.4GHz */
+        { 950, 1100}, /* 0.2GHz */
+        { 950, 1000}, /* 0.1GHz */
 #else //just for dvs test
         {1000000, 1250, 1100, 0},
         {800000, 1250, 1100, 1},
@@ -162,6 +162,96 @@ static const unsigned int dvs_arm_voltage_set[][2] = {
 	{DVSINT1, 1100},
 	{DVSINT2, 1000},
 };
+
+//DevinXtreme: Old values follow
+/* frequency voltage matching table */
+//static const unsigned int frequency_match_1GHZ[][2] = {
+/* frequency, Mathced VDD ARM voltage , Matched VDD INT*/
+//#if 1
+//        {1275, 1100}, /* 1.2GHz */
+//        {1250, 1100}, /* 1.0GHz */
+//        {1175, 1100}, /* 0.8GHz */
+//        {1025, 1100}, /* 0.6GHz */
+//        { 975, 1100}, /* 0.4GHz */
+//        { 950, 1100}, /* 0.2GHz */
+//        { 950, 1000}, /* 0.1GHz */
+//#else //just for dvs test
+//        {1000000, 1250, 1100, 0},
+//        {800000, 1250, 1100, 1},
+//        {400000, 1250, 1100, 2},
+//        {200000, 1250, 1100, 4},
+//        {100000, 950, 1000, 5},
+//#endif
+//};
+
+//static const unsigned int frequency_match_800MHZ[][2] = {
+/* frequency, Mathced VDD ARM voltage , Matched VDD INT*/
+//        {1200, 1100},
+//        {1050, 1100},
+//        {950, 1100},
+//        {950, 1000},
+//};
+//const unsigned int (*frequency_match[2])[2] = {
+//        frequency_match_1GHZ,
+//        frequency_match_800MHZ,
+//};
+
+/*  voltage table */
+//static const unsigned int voltage_table[19] = {
+//	750, 800, 850, 900, 925, 950, 975, 1025,
+//	1100, 1125, 1175, 1200, 1250, 1275, 1300, 
+//	1350, 1400, 1450, 1500
+//};
+
+//extern unsigned int S5PC11X_FREQ_TAB;
+//extern const unsigned int (*frequency_match[2])[4];
+
+//static struct regulator *Reg_Arm = NULL, *Reg_Int = NULL;
+
+//static unsigned int s_arm_voltage=0, s_int_voltage=0;
+//unsigned long set1_gpio;
+//unsigned long set2_gpio;
+//unsigned long set3_gpio;
+
+/*only 4 Arm voltages and 2 internal voltages possible*/
+//static const unsigned int dvs_volt_table_800MHZ[][3] = {
+//        {L0, DVSARM2, DVSINT1},
+//        {L1, DVSARM3, DVSINT1},
+ //266       {L2, DVSARM3, DVSINT1},
+//        {L2, DVSARM4, DVSINT1},
+//        {L3, DVSARM4, DVSINT2},
+//        {L4, DVSARM4, DVSINT2},
+//        {L5, DVSARM4, DVSINT2},
+//};
+
+//static const unsigned int dvs_volt_table_1GHZ[][3] = {
+//        {0, DVSARM1, DVSINT1},//DVSINT0
+//	  {1, DVSARM1, DVSINT1},
+//        {2, DVSARM2, DVSINT1},
+//        {3, DVSARM2, DVSINT1},
+//        {4, DVSARM3, DVSINT1},
+//266       {L3, DVSARM3, DVSINT1},
+//        {5, DVSARM4, DVSINT1},
+//        {6, DVSARM4, DVSINT2},
+//        {L5, DVSARM4, DVSINT2},
+//        {L6, DVSARM4, DVSINT2},
+//};
+
+
+//const unsigned int (*dvs_volt_table[2])[3] = {
+//        dvs_volt_table_1GHZ,
+//        dvs_volt_table_800MHZ,
+//};
+
+//static const unsigned int dvs_arm_voltage_set[][2] = {
+//	{DVSARM1, 1300},
+//	{DVSARM2, 1300},
+//	{DVSARM3, 1050},
+//	{DVSARM4, 950},
+//	{DVSINT1, 1100},
+//	{DVSINT2, 1000},
+//};
+//DevinXtreme: End old voltages
 
 static int set_max8998(unsigned int pwr, enum perf_level p_lv)
 {

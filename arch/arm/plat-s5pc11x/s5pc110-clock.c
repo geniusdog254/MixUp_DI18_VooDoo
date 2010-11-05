@@ -80,6 +80,7 @@ static const u32 s5p_sysout_clk_tab_1GHZ[][4] = {
 /*div0 ratio table*/
 /*apll, a2m, HCLK_MSYS, PCLK_MSYS, HCLK_DSYS, PCLK_DSYS, HCLK_PSYS, PCLK_PSYS, MFC_DIV, G3D_DIV, MSYS source(2D, 3D, MFC)(0->apll,1->mpll), DMC0 div*/
 static const u32 s5p_sys_clk_div0_tab_1GHZ[][DIV_TAB_MAX_FIELD] = {
+	 {0, 7, 7, 1, 6, 1, 6, 1, 6, 6, 0, 3}, /* APLL=1.600GHz, MPLL=667MHz, ARMCLK=1.200GHz, SCLKA2M=200MHz, HCLK_MSYS=200MHz DevinXtreme: Not correct values here, but, nyeh */
          {0, 5, 5, 1, 3, 1, 4, 1, 2, 2, 1, 3}, /* APLL=1.200GHz, MPLL=667MHz, ARMCLK=1.200GHz, SCLKA2M=200MHz, HCLK_MSYS=200MHz */
          {0, 4, 4, 1, 3, 1, 4, 1, 2, 2, 1, 3}, /* APLL=1.000GHz, MPLL=667MHz, ARMCLK=1.000GHz, SCLKA2M=200MHz, HCLK_MSYS=200MHz */
          {0, 3, 3, 1, 3, 1, 4, 1, 2, 2, 1, 3}, /* APLL=0.800GHz, MPLL=667MHz, ARMCLK=0.800GHz, SCLKA2M=200MHz, HCLK_MSYS=200MHz */
@@ -92,6 +93,7 @@ static const u32 s5p_sys_clk_div0_tab_1GHZ[][DIV_TAB_MAX_FIELD] = {
 /*pms value table*/
 /*APLL(m, p, s), MPLL(m, p, s)*/
 static const u32 s5p_sys_clk_mps_tab_1GHZ[][6] = {
+	{400, 8, 1, 667, 12, 1},
         {300, 6, 1, 667, 12, 1},
         {250, 6, 1, 667, 12, 1},
         {200, 6, 1, 667, 12, 1},
