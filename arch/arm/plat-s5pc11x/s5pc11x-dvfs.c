@@ -99,7 +99,8 @@ static unsigned char transition_state_1GHZ[][2] = {
         {4, 1},
         {5, 2},
 	{6, 2},
-	{6, 2}
+	{6, 2},
+	{7, 3}
 };
 
 
