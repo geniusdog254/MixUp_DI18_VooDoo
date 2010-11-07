@@ -64,6 +64,9 @@ static int cur_adc_value = 0;
 
 static bool lightsensor_test = 0;
 
+//Jesse C: Was told this wasn't necessary, but won't compile without it
+static int LIGHT_LEVEL0 = 0;
+
 static struct wake_lock prx_wake_lock;
 
 //static bool light_init_check = false;
@@ -282,15 +285,15 @@ static void gp2a_work_func_light(struct work_struct *work)
 	}
 	
 
-	else if (adc >= 10 && adc < 100)
+	else if (adc >= 15 && adc < 100)
 	{
 		level_state = LIGHT_LEVEL1;
 		buffering = 1;
 	}
-	else if (adc < 10)
+	else if (adc < 15)
 	{
 		//Jesse C. - New brightness level here.
-		level_state = LIGHT_UBERDIM;
+		level_state = LIGHT_LEVEL0;
 		buffering = 1;
 	}
 #endif
@@ -1199,7 +1202,7 @@ static double StateToLux(state_type state)
 		lux = 10.0;
 	}
 	//Jesse C. - New light level, for ultra low light. Keeps it bright most of the time
-	else if(state == LIGHT_UBERDIM){
+	else if(state == LIGHT_LEVEL0){
 		lux = 6.0;
 	}
 
