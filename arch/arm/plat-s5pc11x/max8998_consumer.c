@@ -321,18 +321,53 @@ static int set_max8998(unsigned int pwr, enum perf_level p_lv)
 
 void set_pmic_gpio(void)
 {
+#if 1 //20100520_inchul
 	/*set set1, set2, set3 of max8998 driver as 0*/
-	/* set GPH0(3), GPH0(4) & GPH0(5) as low*/
+	/* set GPB(6), GPB(3) & GPH0(5) as low*/
+   
+	s3c_gpio_cfgpin(S5PC11X_GPB(6), S3C_GPIO_SFN(1));
+	s3c_gpio_setpin(S5PC11X_GPB(6), 0);
+	set1_gpio = S5PC11X_GPB(6);
+
+	s3c_gpio_cfgpin(S5PC11X_GPB(3), S3C_GPIO_SFN(1));
+	s3c_gpio_setpin(S5PC11X_GPB(3), 0);
+	set2_gpio = S5PC11X_GPB(3);
+
+	if(system_rev >= 0x08){ //20100526_inchul
+    printk("[set_pmic_gpio] system_rev = %x \n", system_rev);  //temp.. will be deleted		
+	  s3c_gpio_cfgpin(S5PC11X_GPB(7), S3C_GPIO_SFN(1));
+	  s3c_gpio_setpin(S5PC11X_GPB(7), 0);
+	  set3_gpio = S5PC11X_GPB(7);  
+	}
+ else{
+    printk("[set_pmic_gpio] system_rev = %x \n", system_rev);  //temp.. will be deleted		  
+	  s3c_gpio_cfgpin(S5PC11X_GPH0(5), S3C_GPIO_SFN(1));
+	  s3c_gpio_setpin(S5PC11X_GPH0(5), 0);
+	  set3_gpio = S5PC11X_GPH0(5);
+ }
+
+#else
+	/*set set1, set2, set3 of max8998 driver as 0*/
+	/* set GPH0(2), GPH0(3) & GPH0(4) as low*/
+#if 0    
+	s3c_gpio_cfgpin(S5PC11X_GPH0(2), S3C_GPIO_SFN(1));
+	s3c_gpio_setpin(S5PC11X_GPH0(2), 0);
+	set1_gpio = S5PC11X_GPH0(2);
+#endif    
+
+#ifdef CONFIG_ARIES_VER_B1
+	s3c_gpio_cfgpin(S5PC11X_GPB(3), S3C_GPIO_SFN(1));
+	s3c_gpio_setpin(S5PC11X_GPB(3), 0);
+	set2_gpio = S5PC11X_GPB(3);
+#else
 	s3c_gpio_cfgpin(S5PC11X_GPH0(3), S3C_GPIO_SFN(1));
 	s3c_gpio_setpin(S5PC11X_GPH0(3), 0);
-	set1_gpio = S5PC11X_GPH0(3);
+	set2_gpio = S5PC11X_GPH0(3);
+#endif
 	s3c_gpio_cfgpin(S5PC11X_GPH0(4), S3C_GPIO_SFN(1));
 	s3c_gpio_setpin(S5PC11X_GPH0(4), 0);
-	set2_gpio = S5PC11X_GPH0(4);
-	s3c_gpio_cfgpin(S5PC11X_GPH0(5), S3C_GPIO_SFN(1));
-	s3c_gpio_setpin(S5PC11X_GPH0(5), 0);
-	set3_gpio = S5PC11X_GPH0(5);
-
+	set3_gpio = S5PC11X_GPH0(4);
+#endif
 }
 EXPORT_SYMBOL_GPL(set_pmic_gpio);
 
@@ -356,6 +391,37 @@ EXPORT_SYMBOL(set_voltage);
 
 int set_gpio_dvs(int armSet)
 {
+#if 1 //20100520_inchul
+	DBG("set dvs with %d\n", armSet);
+	switch(armSet) {
+	case DVSARM1:
+		gpio_set_value(set1_gpio, 0);
+		gpio_set_value(set2_gpio, 0);
+		break;
+	case DVSARM2:
+		gpio_set_value(set2_gpio, 0);
+		gpio_set_value(set1_gpio, 1);
+		break;
+	case DVSARM3:	
+		gpio_set_value(set1_gpio, 0);
+		gpio_set_value(set2_gpio, 1);
+		break;
+	case DVSARM4:
+		gpio_set_value(set1_gpio, 1);
+		gpio_set_value(set2_gpio, 1);
+		break;
+	case DVSINT1:
+		gpio_set_value(set3_gpio, 0);
+		break;
+	case DVSINT2:
+		gpio_set_value(set3_gpio, 1);
+		break;
+	default:
+		printk("Invalid parameters to %s\n",__FUNCTION__);
+		return -EINVAL;
+	}
+
+#else
 	unsigned int curPmicArm = readl(S5PC11X_GPH0DAT);
 	DBG("set dvs with %d\n", armSet);
 	switch(armSet) {
@@ -395,6 +461,7 @@ int set_gpio_dvs(int armSet)
 	}
 
 	DBG("S5PC11X_GPH0CON=%x,S5PC11X_GPH0DAT=%x,S5PC11X_GPH0PUD=%x\n",readl(S5PC11X_GPH0CON),readl(S5PC11X_GPH0DAT),readl(S5PC11X_GPH0PUD));
+#endif
 	
 	return 0;
 }
@@ -534,6 +601,15 @@ static int ldo_disable_check(int ldo)
 				return 1;
 
 			break;	
+#endif
+
+		case MAX8998_LDO6: //20100518_inchul.. BT_WL_2.6V(LDO6): alive power in sleep mode(for victory)
+			return 0;
+			break;
+
+		case MAX8998_LDO16: //20100518_inchul.. MIPI_1.8V_C110(LDO16): alive power in sleep mode(for victory)
+			return 0;
+			break;       
 		default:
 			return 1;
 	}
@@ -561,6 +637,27 @@ static int s3c_consumer_suspend(struct platform_device *dev, pm_message_t state)
 	//max8998_ldo_disable_direct(MAX8998_DCDC3);
 	max8998_ldo_disable_direct(MAX8998_DCDC2);
 	max8998_ldo_disable_direct(MAX8998_DCDC1);
+        if(universal_sdhci2_detect_ext_cd()) //card not present
+        {
+             s3c_gpio_slp_cfgpin(S5PC11X_GPG2(2),S3C_GPIO_SLP_OUT0);
+        }
+        else
+        {
+             unsigned int gpio;
+ 
+             s3c_gpio_slp_cfgpin(S5PC11X_GPG2(2),S3C_GPIO_SLP_OUT1 ); //tflash_enable
+             
+             s3c_gpio_slp_cfgpin(S5PC11X_GPG2(0),S3C_GPIO_SFN(2) ); //tflash_clk
+             s3c_gpio_slp_setpull_updown(S5PC11X_GPG2(0), S3C_GPIO_PULL_UP);
+             for (gpio = S5PC11X_GPG2(1); gpio < S5PC11X_GPG2(7); gpio++)
+             {
+                   if (gpio != S5PC11X_GPG2(2))
+                   {
+         		    s3c_gpio_slp_cfgpin(gpio, S3C_GPIO_SFN(2));
+         		    s3c_gpio_slp_setpull_updown(gpio, S3C_GPIO_PULL_NONE);
+                  }
+ 	    }
+        }
 	return 0;
 }
 

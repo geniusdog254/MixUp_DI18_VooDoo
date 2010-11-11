@@ -386,7 +386,7 @@ static enum hrtimer_restart gp2a_timer_func(struct hrtimer *timer)
 	//hrtimer_start(&gp2a->timer,ktime_set(LIGHT_PERIOD,0),HRTIMER_MODE_REL);
 	light_polling_time = ktime_set(0,0);
 	//Jesse C. - This used to be 500000, this should poll 20% more often now, but it may be limited in framework
-	light_polling_time = ktime_add_us(light_polling_time,400000);
+	light_polling_time = ktime_add_us(light_polling_time,300000);
 	hrtimer_start(&gp2a->timer,light_polling_time,HRTIMER_MODE_REL);
 	return HRTIMER_NORESTART;
 }
