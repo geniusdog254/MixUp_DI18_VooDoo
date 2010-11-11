@@ -156,7 +156,7 @@ EXPORT_SYMBOL(gp2a_get_lightsensor_status);
  */
 
 //Jesse C. - Err on the brighter side
-static int buffering = 3;
+static int buffering = 4;
 
 extern int backlight_level;
 
@@ -238,62 +238,83 @@ static void gp2a_work_func_light(struct work_struct *work)
 	gprintk("light_enable = %d\n",light_enable);
 #if 1 //add 150lux
 
-	if(adc >= 1900)
+	/*
+	 * Adding LIGHT_LEVEL6 in order to create one more step in the lighting jumps. 
+	 * LIGHT_LEVEL values can be created as long as you set them here, rather than
+	 * letting the test in StateToLux be surprised. 
+	 */
+
+	if(adc >= 2000)
 	{
-		level_state = LIGHT_LEVEL5;
-		buffering = 5;
+		level_state = LIGHT_LEVEL6;
+		buffering = 6;
 	}			
-			
-	else if(adc >= 1800 && adc < 1900)
+
+	else if(adc >= 1800 && adc < 2000)
 	{
-		level_state = LIGHT_LEVEL4;
-		buffering = 4;
+		if((buffering == 5)||(buffering == 6))
+		{	
+			level_state = LIGHT_LEVEL5;
+			buffering = 5;
+		}
+		else if((buffering == 2)||(buffering == 3)||(buffering == 4))
+		{
+			level_state = LIGHT_LEVEL4;
+			buffering = 4;
+		}
 	}
 
-	else if(adc >= 1200 && adc < 1800)
+	else if(adc >= 1500 && adc < 1800)
 	{
 		if((buffering == 4)||(buffering == 5))
 		{	
-			level_state = LIGHT_LEVEL4;
+			level_state = LIGHT_LEVEL5;
 			buffering = 4;
 		}
 		else if((buffering == 1)||(buffering == 2)||(buffering == 3))
 		{
-			level_state = LIGHT_LEVEL3;
+			level_state = LIGHT_LEVEL4;
 			buffering = 3;
 		}
 	}
 
-	else if(adc >= 400 && adc < 1200)
+	else if(adc >= 1000 && adc < 1500)
 	{
 		if((buffering == 3)||(buffering == 4)||(buffering == 5))
 		{	
-			level_state = LIGHT_LEVEL3;
+			level_state = LIGHT_LEVEL4;
 			buffering = 3;
 		}
 		else if((buffering == 1)||(buffering == 2))
 		{
-			level_state = LIGHT_LEVEL3;
+			level_state = LIGHT_LEVEL4;
 			buffering = 2;
 		}
 	}
 
-	else if(adc >= 100 && adc < 400)
+	else if(adc >= 400 && adc < 1000)
 	{
+		if((buffering == 2)||(buffering == 3)||(buffering == 4))
+		{	
+			level_state = LIGHT_LEVEL3;
+			buffering = 3;
+		}
+		else if(buffering == 2)
+		{
+			level_state = LIGHT_LEVEL2;
+			buffering = 2;
+		}
+	}
+
+	else if(adc >= 25 && adc < 400){
 		level_state = LIGHT_LEVEL2;
 		buffering = 2;
 	}
-	
 
-	else if (adc >= 15 && adc < 100)
+
+	else if (adc < 25)
 	{
 		level_state = LIGHT_LEVEL1;
-		buffering = 1;
-	}
-	else if (adc < 15)
-	{
-		//Jesse C. - New brightness level here.
-		level_state = LIGHT_LEVEL0;
 		buffering = 1;
 	}
 #endif
@@ -1186,14 +1207,17 @@ static double StateToLux(state_type state)
 	gprintk("[%s] cur_state:%d\n",__func__,state);
 	double lux = 0;
 	
-	if(state== LIGHT_LEVEL5){
+	if(state== LIGHT_LEVEL6){
 		lux = 15000.0;
 	}
+	else if(state == LIGHT_LEVEL5){
+		lux = 10000.0;
+	}
 	else if(state == LIGHT_LEVEL4){
-		lux = 9000.0;
+		lux = 6500.0;
 	}
 	else if(state == LIGHT_LEVEL3){
-		lux = 5000.0;
+		lux = 4000.0;
 	}
 	else if(state== LIGHT_LEVEL2){
 		lux = 1000.0;
