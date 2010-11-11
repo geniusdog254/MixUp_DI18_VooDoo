@@ -58,6 +58,8 @@ extern unsigned int s5pc11x_cpufreq_index;
 static const u32 s5p_sysout_clk_tab_1GHZ[][4] = {
 	// APLL:1600,ARMCLK:1600,HCLK_MSYS:200,MPLL:667,HCLK_DSYS:166,HCLK_PSYS:133,PCLK_MSYS:100,PCLK_DSYS:83,PCLK_PSYS:66
 	{1600* MHZ, 667 *MHZ, 1600 *MHZ, 166 *MHZ},
+	// APLL:1000,ARMCLK:1000,HCLK_MSYS:200,MPLL:667,HCLK_DSYS:166,HCLK_PSYS:133,PCLK_MSYS:100,PCLK_DSYS:83,PCLK_PSYS:66
+	{1300* MHZ, 667 *MHZ, 1300 *MHZ, 166 *MHZ},
 	// APLL:1200,ARMCLK:1200,HCLK_MSYS:200,MPLL:667,HCLK_DSYS:166,HCLK_PSYS:133,PCLK_MSYS:100,PCLK_DSYS:83,PCLK_PSYS:66
 	{1200* MHZ, 667 *MHZ, 1200 *MHZ, 166 *MHZ},
 	// APLL:1000,ARMCLK:1000,HCLK_MSYS:200,MPLL:667,HCLK_DSYS:166,HCLK_PSYS:133,PCLK_MSYS:100,PCLK_DSYS:83,PCLK_PSYS:66
@@ -83,6 +85,7 @@ static const u32 s5p_sysout_clk_tab_1GHZ[][4] = {
 /*apll, a2m, HCLK_MSYS, PCLK_MSYS, HCLK_DSYS, PCLK_DSYS, HCLK_PSYS, PCLK_PSYS, MFC_DIV, G3D_DIV, MSYS source(2D, 3D, MFC)(0->apll,1->mpll), DMC0 div*/
 static const u32 s5p_sys_clk_div0_tab_1GHZ[][DIV_TAB_MAX_FIELD] = {
 	 {0, 7, 7, 1, 6, 1, 6, 1, 6, 6, 0, 3}, /* APLL=1.600GHz, MPLL=667MHz, ARMCLK=1.200GHz, SCLKA2M=200MHz, HCLK_MSYS=200MHz */
+       	 {0, 6, 6, 1, 3, 1, 4, 1, 3, 3, 0, 3}, /* APLL=1.300GHz, MPLL=667MHz, ARMCLK=1.200GHz, SCLKA2M=200MHz, HCLK_MSYS=200MHz */   
          {0, 5, 5, 1, 3, 1, 4, 1, 2, 2, 1, 3}, /* APLL=1.200GHz, MPLL=667MHz, ARMCLK=1.200GHz, SCLKA2M=200MHz, HCLK_MSYS=200MHz */
          {0, 4, 4, 1, 3, 1, 4, 1, 2, 2, 1, 3}, /* APLL=1.000GHz, MPLL=667MHz, ARMCLK=1.000GHz, SCLKA2M=200MHz, HCLK_MSYS=200MHz */
          {0, 3, 3, 1, 3, 1, 4, 1, 2, 2, 1, 3}, /* APLL=0.800GHz, MPLL=667MHz, ARMCLK=0.800GHz, SCLKA2M=200MHz, HCLK_MSYS=200MHz */
@@ -96,6 +99,7 @@ static const u32 s5p_sys_clk_div0_tab_1GHZ[][DIV_TAB_MAX_FIELD] = {
 /*APLL(m, p, s), MPLL(m, p, s)*/
 static const u32 s5p_sys_clk_mps_tab_1GHZ[][6] = {
 	{400, 8, 1, 667, 12, 1},
+        {325, 6, 1, 667, 12, 1}, 
         {300, 6, 1, 667, 12, 1},
         {250, 6, 1, 667, 12, 1},
         {200, 6, 1, 667, 12, 1},
@@ -438,6 +442,13 @@ int s5pc11x_clk_set_rate(struct clk *clk, unsigned int target_freq,
 	/*check if change in DMC0 divider*/
 	if(s5p_sys_clk_div0_tab[prevIndex][11] != s5p_sys_clk_div0_tab[index][11])
 	{
+		if(s5p_sys_clk_div0_tab[index][11] == 3) { // for 200mhz/166mhz
+			__raw_writel(0x618, S5P_VA_DMC1 + 0x30);
+			__raw_writel(0x50e, S5P_VA_DMC0 + 0x30);
+		} else {					// for 100mhz/83mhz
+			__raw_writel(0x30c, S5P_VA_DMC1 + 0x30);
+			__raw_writel(0x287, S5P_VA_DMC0 + 0x30);
+		}
 		val = __raw_readl(S5P_CLK_DIV6);
 		val &= ~(S5P_CLKDIV6_ONEDRAM_MASK);
 		val |= (s5p_sys_clk_div0_tab[index][11] << S5P_CLKDIV6_ONEDRAM_SHIFT);

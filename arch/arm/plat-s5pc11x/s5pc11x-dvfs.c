@@ -46,11 +46,12 @@
 unsigned int dvfs_change_direction;
 #define CLIP_LEVEL(a, b) (a > b ? b : a)
 
-unsigned int MAXFREQ_LEVEL_SUPPORTED = 6;
-unsigned int S5PC11X_MAXFREQLEVEL = 6;
+//Seems to work even if you define the wrong numbers, but I have 9 steps so I define 9
+unsigned int MAXFREQ_LEVEL_SUPPORTED = 9;
+unsigned int S5PC11X_MAXFREQLEVEL = 9;
 unsigned int S5PC11X_FREQ_TAB;
 //static spinlock_t g_cpufreq_lock = SPIN_LOCK_UNLOCKED;
-static unsigned int s5pc11x_cpufreq_level = 6;
+static unsigned int s5pc11x_cpufreq_level = 9;
 unsigned int s5pc11x_cpufreq_index = 1;
 
 static char cpufreq_governor_name[CPUFREQ_NAME_LEN] = "conservative";// default governor
@@ -81,13 +82,14 @@ extern unsigned int gbTransitionLogEnable;
 /* frequency */
 static struct cpufreq_frequency_table s5pc110_freq_table_1GHZ[] = {
 	{0, 1600*1000},
-	{1, 1200*1000},
-	{2, 1000*1000},
-	{3, 800*1000},
-	{4, 600*1000},
-	{5, 400*1000},
-	{6, 200*1000},
-	{7, 100*1000},
+	{1, 1300*1000},
+	{2, 1200*1000},
+	{3, 1000*1000},
+	{4, 800*1000},
+	{5, 600*1000},
+	{6, 400*1000},
+	{7, 200*1000},
+	{8, 100*1000},
 	{0, CPUFREQ_TABLE_END},
 };
 
@@ -98,6 +100,7 @@ static unsigned char transition_state_1GHZ[][2] = {
         {3, 1},
         {4, 1},
         {5, 2},
+	{6, 2},
 	{6, 2},
 	{6, 2},
 	{7, 3}
@@ -722,6 +725,9 @@ static int __init s5pc110_cpu_init(struct cpufreq_policy *policy)
 
 	if (policy->cpu != 0)
 		return -EINVAL;
+	//Jesse C - Devs, take note. This is the speed the kernel sets at boot. It doesn't scale during boot.
+	//Leave it at 1Ghz for safety. It can still be changed later in SetCPU, but if you set it too high
+	//here then it won't boot. You've been warned.
 	policy->cur = policy->min = policy->max = 1000000;
 	//spin_lock_irqsave(&g_cpufreq_lock, irqflags);
 #if 0//boot 800Mhz, kernel 1Ghz
@@ -746,8 +752,8 @@ static int __init s5pc110_cpu_init(struct cpufreq_policy *policy)
 	if(s5pc110_verion==1){
 		printk("%s, EVT1 1Ghz Enable\n",__func__);
 		S5PC11X_FREQ_TAB = 0;
-		S5PC11X_MAXFREQLEVEL = 6;
-		MAXFREQ_LEVEL_SUPPORTED = 6;
+		S5PC11X_MAXFREQLEVEL = 9;
+		MAXFREQ_LEVEL_SUPPORTED = 9;
 		g_dvfs_high_lock_limit = 4;
 	}
 	else

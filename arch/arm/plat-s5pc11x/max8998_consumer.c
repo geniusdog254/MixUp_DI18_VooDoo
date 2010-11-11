@@ -76,9 +76,9 @@ enum PMIC_VOLTAGE {
 /* frequency voltage matching table */
 static const unsigned int frequency_match_1GHZ[][2] = {
 /* frequency, Matched VDD ARM voltage , Matched VDD INT*/
-//Jesse C - ^^ Learn to type, Samsung ;)
 #if 1
-	{1300, 1100}, /* 1.6GHz */
+	{1325, 1100}, /* 1.6GHz */
+	{1300, 1100}, /* 1.3GHz */
         {1275, 1100}, /* 1.2GHz */
         {1250, 1100}, /* 1.0GHz */
         {1175, 1100}, /* 0.8GHz */
@@ -108,10 +108,10 @@ const unsigned int (*frequency_match[2])[2] = {
 };
 
 /*  voltage table */
-static const unsigned int voltage_table[19] = {
-	750, 800, 850, 900, 925, 950, 975, 1025,
-	1100, 1125, 1175, 1200, 1250, 1275, 1300, 
-	1350, 1400, 1450, 1500
+static const unsigned int voltage_table[20] = {
+	750, 800, 850, 900, 950, 925, 1000, 1025, 1050,
+	1100, 1150, 1200, 1225, 1250, 1275, 1300, 1325, 
+ 	1350, 1400, 1450, 1500
 };
 
 extern unsigned int S5PC11X_FREQ_TAB;
@@ -144,6 +144,7 @@ static const unsigned int dvs_volt_table_1GHZ[][3] = {
  //266       {L3, DVSARM3, DVSINT1},
         {5, DVSARM4, DVSINT1},
         {6, DVSARM4, DVSINT2},
+        {7, DVSARM4, DVSINT2},
 //        {L5, DVSARM4, DVSINT2},
 //        {L6, DVSARM4, DVSINT2},
 };
@@ -162,96 +163,6 @@ static const unsigned int dvs_arm_voltage_set[][2] = {
 	{DVSINT1, 1100},
 	{DVSINT2, 1000},
 };
-
-//DevinXtreme: Old values follow
-/* frequency voltage matching table */
-//static const unsigned int frequency_match_1GHZ[][2] = {
-/* frequency, Mathced VDD ARM voltage , Matched VDD INT*/
-//#if 1
-//        {1275, 1100}, /* 1.2GHz */
-//        {1250, 1100}, /* 1.0GHz */
-//        {1175, 1100}, /* 0.8GHz */
-//        {1025, 1100}, /* 0.6GHz */
-//        { 975, 1100}, /* 0.4GHz */
-//        { 950, 1100}, /* 0.2GHz */
-//        { 950, 1000}, /* 0.1GHz */
-//#else //just for dvs test
-//        {1000000, 1250, 1100, 0},
-//        {800000, 1250, 1100, 1},
-//        {400000, 1250, 1100, 2},
-//        {200000, 1250, 1100, 4},
-//        {100000, 950, 1000, 5},
-//#endif
-//};
-
-//static const unsigned int frequency_match_800MHZ[][2] = {
-/* frequency, Mathced VDD ARM voltage , Matched VDD INT*/
-//        {1200, 1100},
-//        {1050, 1100},
-//        {950, 1100},
-//        {950, 1000},
-//};
-//const unsigned int (*frequency_match[2])[2] = {
-//        frequency_match_1GHZ,
-//        frequency_match_800MHZ,
-//};
-
-/*  voltage table */
-//static const unsigned int voltage_table[19] = {
-//	750, 800, 850, 900, 925, 950, 975, 1025,
-//	1100, 1125, 1175, 1200, 1250, 1275, 1300, 
-//	1350, 1400, 1450, 1500
-//};
-
-//extern unsigned int S5PC11X_FREQ_TAB;
-//extern const unsigned int (*frequency_match[2])[4];
-
-//static struct regulator *Reg_Arm = NULL, *Reg_Int = NULL;
-
-//static unsigned int s_arm_voltage=0, s_int_voltage=0;
-//unsigned long set1_gpio;
-//unsigned long set2_gpio;
-//unsigned long set3_gpio;
-
-/*only 4 Arm voltages and 2 internal voltages possible*/
-//static const unsigned int dvs_volt_table_800MHZ[][3] = {
-//        {L0, DVSARM2, DVSINT1},
-//        {L1, DVSARM3, DVSINT1},
- //266       {L2, DVSARM3, DVSINT1},
-//        {L2, DVSARM4, DVSINT1},
-//        {L3, DVSARM4, DVSINT2},
-//        {L4, DVSARM4, DVSINT2},
-//        {L5, DVSARM4, DVSINT2},
-//};
-
-//static const unsigned int dvs_volt_table_1GHZ[][3] = {
-//        {0, DVSARM1, DVSINT1},//DVSINT0
-//	  {1, DVSARM1, DVSINT1},
-//        {2, DVSARM2, DVSINT1},
-//        {3, DVSARM2, DVSINT1},
-//        {4, DVSARM3, DVSINT1},
-//266       {L3, DVSARM3, DVSINT1},
-//        {5, DVSARM4, DVSINT1},
-//        {6, DVSARM4, DVSINT2},
-//        {L5, DVSARM4, DVSINT2},
-//        {L6, DVSARM4, DVSINT2},
-//};
-
-
-//const unsigned int (*dvs_volt_table[2])[3] = {
-//        dvs_volt_table_1GHZ,
-//        dvs_volt_table_800MHZ,
-//};
-
-//static const unsigned int dvs_arm_voltage_set[][2] = {
-//	{DVSARM1, 1300},
-//	{DVSARM2, 1300},
-//	{DVSARM3, 1050},
-//	{DVSARM4, 950},
-//	{DVSINT1, 1100},
-//	{DVSINT2, 1000},
-//};
-//DevinXtreme: End old voltages
 
 static int set_max8998(unsigned int pwr, enum perf_level p_lv)
 {
@@ -334,12 +245,12 @@ void set_pmic_gpio(void)
 	set2_gpio = S5PC11X_GPB(3);
 
 	if(system_rev >= 0x08){ //20100526_inchul
-    printk("[set_pmic_gpio] system_rev = %x \n", system_rev);  //temp.. will be deleted		
+     printk("[set_pmic_gpio] system_rev = %x \n", system_rev);  //temp.. will be deleted		
 	  s3c_gpio_cfgpin(S5PC11X_GPB(7), S3C_GPIO_SFN(1));
 	  s3c_gpio_setpin(S5PC11X_GPB(7), 0);
 	  set3_gpio = S5PC11X_GPB(7);  
 	}
- else{
+   else{
     printk("[set_pmic_gpio] system_rev = %x \n", system_rev);  //temp.. will be deleted		  
 	  s3c_gpio_cfgpin(S5PC11X_GPH0(5), S3C_GPIO_SFN(1));
 	  s3c_gpio_setpin(S5PC11X_GPH0(5), 0);
@@ -347,7 +258,7 @@ void set_pmic_gpio(void)
  }
 
 #else
-	/*set set1, set2, set3 of max8998 driver as 0*/
+ 	/*set set1, set2, set3 of max8998 driver as 0*/
 	/* set GPH0(2), GPH0(3) & GPH0(4) as low*/
 #if 0    
 	s3c_gpio_cfgpin(S5PC11X_GPH0(2), S3C_GPIO_SFN(1));
@@ -360,12 +271,12 @@ void set_pmic_gpio(void)
 	s3c_gpio_setpin(S5PC11X_GPB(3), 0);
 	set2_gpio = S5PC11X_GPB(3);
 #else
-	s3c_gpio_cfgpin(S5PC11X_GPH0(3), S3C_GPIO_SFN(1));
-	s3c_gpio_setpin(S5PC11X_GPH0(3), 0);
+ 	s3c_gpio_cfgpin(S5PC11X_GPH0(3), S3C_GPIO_SFN(1));
+ 	s3c_gpio_setpin(S5PC11X_GPH0(3), 0);
 	set2_gpio = S5PC11X_GPH0(3);
 #endif
-	s3c_gpio_cfgpin(S5PC11X_GPH0(4), S3C_GPIO_SFN(1));
-	s3c_gpio_setpin(S5PC11X_GPH0(4), 0);
+ 	s3c_gpio_cfgpin(S5PC11X_GPH0(4), S3C_GPIO_SFN(1));
+ 	s3c_gpio_setpin(S5PC11X_GPH0(4), 0);
 	set3_gpio = S5PC11X_GPH0(4);
 #endif
 }
@@ -594,13 +505,14 @@ static int ldo_disable_check(int ldo)
 				return 1;
 			break;
 #endif
-		case MAX8998_LDO4:
-			if(get_headset_status()==SEC_HEADSET_4_POLE_DEVICE) //fix sendend is low in sleep
-				return 0;
-			else
-				return 1;
 
-			break;	
+#if 0 //20100518_inchul.. VADC_3.3V_C110(LDO4): alive power in sleep mode(for victory) 
+ 		case MAX8998_LDO4:
+ 			if(get_headset_status()==SEC_HEADSET_4_POLE_DEVICE) //fix sendend is low in sleep
+ 				return 0;
+ 			else
+ 				return 1;
+ 			break;	
 #endif
 
 		case MAX8998_LDO6: //20100518_inchul.. BT_WL_2.6V(LDO6): alive power in sleep mode(for victory)
@@ -610,9 +522,9 @@ static int ldo_disable_check(int ldo)
 		case MAX8998_LDO16: //20100518_inchul.. MIPI_1.8V_C110(LDO16): alive power in sleep mode(for victory)
 			return 0;
 			break;       
-		default:
-			return 1;
-	}
+ 		default:
+ 			return 1;
+ 	}
 }
 
 static int s3c_consumer_suspend(struct platform_device *dev, pm_message_t state)
