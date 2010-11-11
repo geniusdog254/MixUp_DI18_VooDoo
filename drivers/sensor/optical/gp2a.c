@@ -242,78 +242,56 @@ static void gp2a_work_func_light(struct work_struct *work)
 	 * Adding LIGHT_LEVEL6 in order to create one more step in the lighting jumps. 
 	 * LIGHT_LEVEL values can be created as long as you set them here, rather than
 	 * letting the test in StateToLux be surprised. 
+	 *
+	 * Alright, buffering works a lot easier than I was making it. All it's doing is 
+	 * seeing if it is coming from above or below. Just set the buffer to the same value
+	 * as the light level. Easy, easy. If you add another LIGHT_LEVEL, you need to extend
+	 * the buffer.
 	 */
 
-	if(adc >= 2000)
-	{
+	if(adc >= 2000){
 		level_state = LIGHT_LEVEL6;
 		buffering = 6;
-	}			
-
-	else if(adc >= 1800 && adc < 2000)
-	{
-		if((buffering == 5)||(buffering == 6))
-		{	
+	}				
+	else if(adc >= 1800 && adc < 2000){
+		level_state = LIGHT_LEVEL5;
+		buffering = 5;
+	}
+	else if(adc >= 1500 && adc < 1800){
+		if((buffering == 5)||(buffering == 6)){	
 			level_state = LIGHT_LEVEL5;
 			buffering = 5;
 		}
-		else if((buffering == 2)||(buffering == 3)||(buffering == 4))
-		{
+		else if((buffering == 1)||(buffering == 2)||(buffering == 3)||(buffering == 4)){
 			level_state = LIGHT_LEVEL4;
 			buffering = 4;
 		}
 	}
-
-	else if(adc >= 1500 && adc < 1800)
-	{
-		if((buffering == 4)||(buffering == 5))
-		{	
-			level_state = LIGHT_LEVEL5;
+	else if(adc >= 1000 && adc < 1500){
+		if((buffering == 4)||(buffering == 5)||(buffering == 6)){	
+			level_state = LIGHT_LEVEL4;
 			buffering = 4;
 		}
-		else if((buffering == 1)||(buffering == 2)||(buffering == 3))
-		{
-			level_state = LIGHT_LEVEL4;
-			buffering = 3;
-		}
-	}
-
-	else if(adc >= 1000 && adc < 1500)
-	{
-		if((buffering == 3)||(buffering == 4)||(buffering == 5))
-		{	
-			level_state = LIGHT_LEVEL4;
-			buffering = 3;
-		}
-		else if((buffering == 1)||(buffering == 2))
-		{
-			level_state = LIGHT_LEVEL4;
-			buffering = 2;
-		}
-	}
-
-	else if(adc >= 400 && adc < 1000)
-	{
-		if((buffering == 2)||(buffering == 3)||(buffering == 4))
-		{	
+		else if((buffering == 1)||(buffering == 2)||(buffering == 3)){
 			level_state = LIGHT_LEVEL3;
 			buffering = 3;
 		}
-		else if(buffering == 2)
-		{
+	}
+	else if(adc >= 400 && adc < 1000){
+		if((buffering == 3)||(buffering == 4)||(buffering == 5)||(buffering == 6)){	
+			level_state = LIGHT_LEVEL3;
+			buffering = 3;
+		}
+		else if((buffering == 1)||(buffering == 2)){
 			level_state = LIGHT_LEVEL2;
 			buffering = 2;
 		}
 	}
-
 	else if(adc >= 25 && adc < 400){
 		level_state = LIGHT_LEVEL2;
 		buffering = 2;
 	}
-
-
-	else if (adc < 25)
-	{
+	else if (adc < 25){
 		level_state = LIGHT_LEVEL1;
 		buffering = 1;
 	}
